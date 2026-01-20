@@ -15,7 +15,11 @@ const client = new OpenAI({
     'X-Title': 'Garfield Roast',
   },
 });
-const redis = Redis.fromEnv();
+let _redis: Redis | null = null;
+function getRedis(): Redis {
+  if (!_redis) _redis = Redis.fromEnv();
+  return _redis;
+}
 
 export const maxDuration = 60;
 
@@ -25,8 +29,8 @@ export async function POST(req: NextRequest) {
   /* ── 1. Rate limiting ── */
   const today = new Date().toISOString().split('T')[0];
   const rlKey = `rl:${ip}:${today}`;
-  const usage = await redis.incr(rlKey);
-  if (usage === 1) await redis.expire(rlKey, 86400);
+  const usage = await getRedis().incr(rlKey);
+  if (usage === 1) await getRedis().expire(rlKey, 86400);
   if (usage > 3) {
     return NextResponse.json(
       { error: 'rate_limit', message: '3 roasts/day exceeded' },
@@ -41,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   /* ── 2. Check cache ── */
   const cacheKey = `roast:${repoUrl}:${mode}`;
-  const cached   = await redis.get(cacheKey);
+  const cached   = await getRedis().get(cacheKey);
   if (cached) return NextResponse.json(cached);
 
   /* ── 3. Pack repo with repomix ── */
@@ -85,7 +89,7 @@ export async function POST(req: NextRequest) {
   }
 
   /* ── 8. Cache result for 24h ── */
-  await redis.setex(cacheKey, 86400, result);
+  await getRedis().setex(cacheKey, 86400, result);
 
   return NextResponse.json(result);
 }
