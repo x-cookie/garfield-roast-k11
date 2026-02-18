@@ -1,0 +1,243 @@
+'use client';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+const GF_FRAMES = [
+`
+   /\\_/\\
+  (  u.u )
+  ( =   = )
+   \\  ω  /
+    |ZZzZ|
+     \\___/`,
+`
+   /\\_/\\
+  (  -.- )
+  ( =   = )
+   \\  ω  /
+    | ??? |
+     \\___/`,
+`
+   /\\_/\\
+  (  o.o )
+  ( =   = )
+   \\  ω  /
+    |.....|
+     \\___/`,
+`
+   /\\_/\\
+  (  -.- )
+  ( =   = )
+   \\  >  /
+    |*sigh|
+     \\___/`,
+];
+
+const MSGS = [
+  'Garfield is reading your code...',
+  'Garfield has seen worse. Not by much.',
+  'Garfield is counting your TODO comments...',
+  'Garfield judges your variable names...',
+  'Garfield is writing the verdict...',
+  'Almost done. Garfield needs a second.',
+];
+
+const SKIP = [
+  /node_modules/, /\.git\//, /package-lock\.json/, /yarn\.lock/,
+  /pnpm-lock/, /\.min\.js$/, /dist\//, /build\//, /\.next\//,
+  /\.(png|jpg|gif|svg|ico|woff|woff2|ttf|eot|pdf|zip|tar|gz)$/i,
+];
+
+function rlCheck(): boolean {
+  if (typeof window === 'undefined') return true;
+  const today = new Date().toDateString();
+  const d = JSON.parse(localStorage.getItem('_gr') || '{"d":"","n":0}');
+  if (d.d !== today) { localStorage.setItem('_gr', JSON.stringify({ d: today, n: 0 })); return true; }
+  return d.n < 3;
+}
+
+function rlIncr() {
+  const today = new Date().toDateString();
+  const d = JSON.parse(localStorage.getItem('_gr') || '{"d":"","n":0}');
+  localStorage.setItem('_gr', JSON.stringify({ d: today, n: d.d === today ? d.n + 1 : 1 }));
+}
+
+const MODES = [
+  { key: 'savage', ico: '🔥', nm: 'SAVAGE', ds: 'No mercy. Pure truth.' },
+  { key: 'snarky', ico: '😏', nm: 'SNARKY', ds: 'Witty. Still stings.' },
+  { key: 'gentle', ico: '🤝', nm: 'GENTLE', ds: 'Honest. Kinder.' },
+];
+
+export default function RoastPage() {
+  const router = useRouter();
+  const [repo, setRepo] = useState('');
+  const [mode, setMode] = useState('savage');
+  const [inputState, setInputState] = useState('');
+  const [chipVisible, setChipVisible] = useState(false);
+  const [chipData, setChipData] = useState({ name: '—', lang: '—', stars: '— ⭐', files: '— files' });
+  const [loading, setLoading] = useState(false);
+  const [rlWarn, setRlWarn] = useState(false);
+  const [gfFrame, setGfFrame] = useState(GF_FRAMES[0]);
+  const [gfMsg, setGfMsg] = useState(MSGS[0]);
+  const metaRef = useRef<Record<string, unknown> | null>(null);
+  const filesRef = useRef<{ path: string; type: string }[]>([]);
+  const loaderRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (loaderRef.current) clearInterval(loaderRef.current);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+  }, []);
+
+  function startLoader() {
+    setLoading(true);
+    let fi = 0, mi = 0;
+    loaderRef.current = setInterval(() => {
+      fi = Math.min(fi + 1, 3);
+      mi = (mi + 1) % MSGS.length;
+      setGfFrame(GF_FRAMES[fi]);
+      setGfMsg(MSGS[mi]);
+    }, 750);
+  }
+
+  function stopLoader() {
+    if (loaderRef.current) clearInterval(loaderRef.current);
+    setLoading(false);
+    setGfFrame(GF_FRAMES[0]);
+    setGfMsg(MSGS[0]);
+  }
+
+  async function loadRepoMeta(r: string) {
+    try {
+      const res = await fetch(`/api/repo-meta?repo=${r}`);
+      if (!res.ok) throw new Error('not found');
+      const d = await res.json();
+      metaRef.current = d;
+      setChipData({ name: d.name, lang: d.language || '—', stars: `${(d.stars || 0).toLocaleString()} ⭐`, files: '— files' });
+      setChipVisible(true);
+      loadFileTree(r, (d.defaultBranch as string) || 'main');
+    } catch {
+      setInputState('state-bad');
+      setChipVisible(false);
+    }
+  }
+
+  async function loadFileTree(r: string, branch: string) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${r}/git/trees/${branch}?recursive=1`);
+      if (!res.ok) throw new Error('fetch failed');
+      const d = await res.json();
+      filesRef.current = (d.tree || [])
+        .filter((f: { type: string; path: string }) => f.type === 'blob' && !SKIP.some(p => p.test(f.path)))
+        .slice(0, 80);
+      setChipData(prev => ({ ...prev, files: `${filesRef.current.length} files` }));
+    } catch {
+      setChipData(prev => ({ ...prev, files: '— files' }));
+    }
+  }
+
+  function handleUrlChange(v: string) {
+    const clean = v.replace(/https?:\/\/(www\.)?github\.com\//, '').replace(/\/$/, '').trim();
+    setRepo(clean);
+    const ok = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(clean);
+    setInputState(ok ? 'state-ok' : clean.length > 4 ? 'state-bad' : '');
+    if (!ok) { setChipVisible(false); return; }
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => loadRepoMeta(clean), 700);
+  }
+
+  async function doRoast() {
+    if (!rlCheck()) { setRlWarn(true); return; }
+    if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) { setInputState('state-bad'); return; }
+    startLoader();
+    try {
+      const res = await fetch('/api/roast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ repoUrl: repo, mode }),
+      });
+      if (res.status === 429) { stopLoader(); setRlWarn(true); return; }
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      const result = await res.json();
+      rlIncr();
+      sessionStorage.setItem('garfield_result', JSON.stringify({
+        result, repo, mode,
+        files: filesRef.current,
+        meta: metaRef.current,
+      }));
+      router.push('/result');
+    } catch (e) {
+      console.error(e);
+      stopLoader();
+    }
+  }
+
+  return (
+    <div id="roast-page">
+      <div className="input-wrap">
+        <span className="tag" style={{ display: 'inline-block', marginBottom: '16px' }}>[ ROAST MY REPO ]</span>
+        <h1 className="input-title">
+          Drop your repo.<br />
+          <span style={{ color: 'var(--orange)' }}>Garfield wakes up.</span>
+        </h1>
+        <p className="input-sub">Public GitHub repos only. Be brave.</p>
+
+        <div className="url-field">
+          <span className="url-prefix">github.com/</span>
+          <input
+            type="text"
+            className={`url-input ${inputState}`}
+            placeholder="username/repository-name"
+            onChange={e => handleUrlChange(e.target.value)}
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+        </div>
+
+        {chipVisible && (
+          <div className="repo-chip show">
+            <span style={{ fontSize: '20px' }}>📁</span>
+            <div style={{ flex: 1 }}>
+              <div className="chip-name">{chipData.name}</div>
+              <div className="chip-meta">
+                <span>{chipData.files}</span>
+                <span>{chipData.lang}</span>
+                <span>{chipData.stars}</span>
+              </div>
+            </div>
+            <span className="chip-ok">✓</span>
+          </div>
+        )}
+
+        <div className="mode-head">SELECT ROAST MODE</div>
+        <div className="modes">
+          {MODES.map(m => (
+            <button key={m.key} className={`mode ${mode === m.key ? 'on' : ''}`} onClick={() => setMode(m.key)}>
+              <span className="mode-ico">{m.ico}</span>
+              <span className="mode-nm">{m.nm}</span>
+              <span className="mode-ds">{m.ds}</span>
+            </button>
+          ))}
+        </div>
+
+        {rlWarn && (
+          <div className="rl-warn show">
+            ⚠ You&apos;ve used all 3 free roasts today. Come back tomorrow.
+          </div>
+        )}
+
+        <button className="btn btn-primary submit-btn" disabled={loading} onClick={doRoast}>
+          {loading ? '😴 Garfield is waking up...' : '🔥 ROAST IT'}
+        </button>
+
+        {loading && (
+          <div className="gf-loader show">
+            <pre className="gf-anim">{gfFrame}</pre>
+            <div className="gf-msg">{gfMsg}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
