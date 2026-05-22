@@ -3,15 +3,35 @@ import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconFlame, IconSmirk, IconLeaf, IconFolder, IconMoon, IconWarning } from '../icons';
 
-// One frame per PROG_STEP — Garfield's reaction escalates with the scan
-const GF_FRAMES = [
+// Sub-frame arrays per PROG_STEP — cycles at 250ms to create living animation
+// Eyes shift DOWN progressively as scan deepens (Garfield watches the progress bar below)
+const STEP_FRAMES: string[][] = [
+  // Step 0 — Waking up, curious, eyes scan left↔right
+  [
 `
    /\\_/\\
   (  o.o )
   ( =   = )
    \\  ω  /
-    | ok..|
+    | ok  |
      \\___/`,
+`
+   /\\_/\\
+  (  o.O )
+  ( =   = )
+   \\  ω  /
+    | ok  |
+     \\___/`,
+`
+   /\\_/\\
+  (  O.o )
+  ( =   = )
+   \\  ω  /
+    | ok  |
+     \\___/`,
+  ],
+  // Step 1 — Reading, starting to look down
+  [
 `
    /\\_/\\
   (  -.- )
@@ -21,25 +41,79 @@ const GF_FRAMES = [
      \\___/`,
 `
    /\\_/\\
-  (  >.< )
+  ( '..' )
   ( =   = )
    \\  ω  /
+    | ... |
+     \\___/`,
+  ],
+  // Step 2 — Looking DOWN at progress bar (v = downward gaze)
+  [
+`
+   /\\_/\\
+  ( '..' )
+  ( =   = )
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
+  (  v.v )
+  ( =   = )
+   \\  v  /
+    | hmm |
+     \\___/`,
+`
+   /\\_/\\
+  ( '..' )
+  ( =   = )
+   \\  v  /
+    |.hmm.|
+     \\___/`,
+  ],
+  // Step 3 — HORRIFIED by what he sees (eyes wide, staring DOWN)
+  [
+`
+   /\\_/\\
   ( O _ O )
   ( =   = )
-   \\  !  /
-    |wtf.|
+   \\  ↓  /
+    |!wtf!|
      \\___/`,
+`
+   /\\_/\\
+  ( o _ O )
+  ( =   = )
+   \\  ↓  /
+    |!wtf!|
+     \\___/`,
+`
+   /\\_/\\
+  ( O _ o )
+  ( =   = )
+   \\  ↓  /
+    | ... |
+     \\___/`,
+  ],
+  // Step 4 — Resigned, still looking down
+  [
 `
    /\\_/\\
   (  -_- )
   ( =   = )
    \\  >  /
-    |*sigh|
+    |sigh.|
      \\___/`,
+`
+   /\\_/\\
+  ( -_-' )
+  ( =   = )
+   \\  >  /
+    |sigh.|
+     \\___/`,
+  ],
+  // Step 5 — Writing verdict, glancing back up
+  [
 `
    /\\_/\\
   (  u.u )
@@ -47,6 +121,21 @@ const GF_FRAMES = [
    \\  ω  /
     |fine.|
      \\___/`,
+`
+   /\\_/\\
+  (  -.- )
+  ( =   = )
+   \\  ω  /
+    |fine.|
+     \\___/`,
+`
+   /\\_/\\
+  (  u.- )
+  ( =   = )
+   \\  ω  /
+    |fine.|
+     \\___/`,
+  ],
 ];
 
 const MSGS = [
@@ -103,7 +192,7 @@ export default function RoastPage() {
   const [loading, setLoading] = useState(false);
   const [rlWarn, setRlWarn] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [gfFrame, setGfFrame] = useState(GF_FRAMES[0]);
+  const [gfFrame, setGfFrame] = useState(STEP_FRAMES[0][0]);
   const [gfKey, setGfKey] = useState(0);
   const [gfMsg, setGfMsg] = useState(MSGS[0]);
   const [progress, setProgress] = useState(0);
@@ -111,11 +200,14 @@ export default function RoastPage() {
   const metaRef = useRef<Record<string, unknown> | null>(null);
   const filesRef = useRef<{ path: string; type: string }[]>([]);
   const loaderRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const subFrameTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const stepIdxRef = useRef(0);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => () => {
     if (loaderRef.current) clearInterval(loaderRef.current);
+    if (subFrameTimer.current) clearInterval(subFrameTimer.current);
     if (debounceRef.current) clearTimeout(debounceRef.current);
   }, []);
 
@@ -123,18 +215,34 @@ export default function RoastPage() {
     setLoading(true);
     setProgress(0);
     setStepLabel('Starting...');
-    setGfFrame(GF_FRAMES[0]);
+    stepIdxRef.current = 0;
+    setGfFrame(STEP_FRAMES[0][0]);
     setGfKey(0);
+
+    // Sub-frame animation at 250ms — creates living animation within each step
+    let sf = 0;
+    subFrameTimer.current = setInterval(() => {
+      sf++;
+      const step = stepIdxRef.current;
+      const frames = STEP_FRAMES[step];
+      setGfFrame(frames[sf % frames.length]);
+    }, 250);
+
+    // Message cycling
     let mi = 0;
     loaderRef.current = setInterval(() => {
       mi = (mi + 1) % MSGS.length;
       setGfMsg(MSGS[mi]);
     }, 1400);
+
+    // Progress steps — change expression + trigger pop-in
     progTimers.current = PROG_STEPS.map(({ pct, label, ms, frame }) =>
       setTimeout(() => {
         setProgress(pct);
         setStepLabel(label);
-        setGfFrame(GF_FRAMES[frame]);
+        stepIdxRef.current = frame;
+        sf = 0;
+        setGfFrame(STEP_FRAMES[frame][0]);
         setGfKey(k => k + 1);
       }, ms)
     );
@@ -142,12 +250,14 @@ export default function RoastPage() {
 
   function stopLoader() {
     if (loaderRef.current) clearInterval(loaderRef.current);
+    if (subFrameTimer.current) clearInterval(subFrameTimer.current);
     progTimers.current.forEach(clearTimeout);
     progTimers.current = [];
     setLoading(false);
     setProgress(0);
     setStepLabel('');
-    setGfFrame(GF_FRAMES[0]);
+    stepIdxRef.current = 0;
+    setGfFrame(STEP_FRAMES[0][0]);
     setGfKey(0);
     setGfMsg(MSGS[0]);
   }

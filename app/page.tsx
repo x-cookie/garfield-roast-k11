@@ -2,7 +2,9 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconFlame, IconLink, IconCat, IconShare } from './icons';
+import HeroParticles from './components/HeroParticles';
 
+// 12 frames — cycles at 350ms = ~4.2s full loop, creates illusion of movement
 const HERO_FRAMES = [
 `   /\\___/\\
   (  -.- )
@@ -12,17 +14,38 @@ const HERO_FRAMES = [
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
-  (  u.- )
+  (  -.- )
   ( = · = )
    \\  ω  /
-    |Zzz..|
+    | ZZz|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
   (  -.- )
-  ( = ◉ = )
+  ( = · = )
+   \\  ω  /
+    |zZZ.|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  --- )
+  ( = · = )
    \\  ω  /
     | ... |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -'- )
+  ( = · = )
+   \\  ω  /
+    | ... |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  o.o )
+  ( = · = )
+   \\  ω  /
+    |.....|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
@@ -33,10 +56,31 @@ const HERO_FRAMES = [
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
+  (  >.< )
+  ( = · = )
+   \\  ω  /
+    | meh |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
   (  -_- )
   ( = · = )
    \\  ω  /
     | meh |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -'- )
+  ( = · = )
+   \\  ω  /
+    |Zzz..|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  u.- )
+  ( = · = )
+   \\  ω  /
+    |.zZ..|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
@@ -98,8 +142,8 @@ export default function LandingPage() {
         frameIdx.current = (frameIdx.current + 1) % HERO_FRAMES.length;
         el.textContent = HERO_FRAMES[frameIdx.current];
         el.style.opacity = '1';
-      }, 300);
-    }, 3200);
+      }, 140);
+    }, 350);
     return () => clearInterval(interval);
   }, []);
 
@@ -147,6 +191,7 @@ export default function LandingPage() {
     <div id="landing">
 
       <section className="hero" ref={heroSectionRef}>
+        <HeroParticles />
         <div className="hero-glow" />
         <pre className="hero-ascii" ref={heroRef}>{HERO_FRAMES[0]}</pre>
 
@@ -223,6 +268,48 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ── What Garfield Exposes ── */}
+      <div style={{ borderTop: '1px solid var(--border)', background: 'var(--bg)' }}>
+        <div className="section">
+          <div className="section-eyebrow" data-reveal>
+            <span className="tag">[ WHAT GARFIELD FINDS ]</span>
+            <h2 className="section-title">No bug goes<br />unroasted.</h2>
+            <p className="section-desc">Garfield has a list. He checks it twice. Then he judges you for needing the list in the first place.</p>
+          </div>
+          <div className="expose-grid">
+            {[
+              { n:'01', title:'ARCHITECTURE',  desc:'God objects, circular deps, functions with 300 lines trying to do 12 different jobs.' },
+              { n:'02', title:'NAMING CRIMES', desc:"Variables named 'data', 'info', 'stuff'. Functions named 'doTheThing'. Garfield weeps." },
+              { n:'03', title:'SECURITY HOLES',desc:'Hardcoded secrets, eval() calls, wildcard CORS, missing validation. He will find them.' },
+              { n:'04', title:'TECH DEBT',     desc:'TODO comments from 2019, console.logs in prod, magic numbers with no explanation.' },
+              { n:'05', title:'DEP BLOAT',     desc:'47 packages to render a checkbox. node_modules is 800MB. The logic is 18 lines.' },
+              { n:'06', title:'NO DOCS',       desc:"README says 'coming soon'. Installation section says 'TBD'. Garfield says goodbye." },
+            ].map(({ n, title, desc }, i) => (
+              <div key={n} className="expose-card" data-reveal data-delay={String((i % 3) + 1)}>
+                <div className="expose-n">{n} /</div>
+                <div className="expose-title">{title}</div>
+                <p className="expose-desc">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Value Props ── */}
+      <div className="value-strip" data-reveal>
+        {[
+          { label: 'FREE',       sub: '3 roasts / day · no account' },
+          { label: 'FAST',       sub: 'Results in under 60 seconds' },
+          { label: 'SPECIFIC',   sub: 'References your actual files' },
+          { label: 'SHAREABLE',  sub: 'Screenshot-ready card for X' },
+        ].map(({ label, sub }) => (
+          <div key={label} className="value-item">
+            <div className="value-label">{label}</div>
+            <div className="value-sub">{sub}</div>
+          </div>
+        ))}
       </div>
 
       <div className="roast-examples">
