@@ -11,98 +11,98 @@ const STEP_FRAMES: string[][] = [
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  o.◉ )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  o.◉ )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ..  |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ..  |
      \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  ◉.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  ◉.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ..  |
      \\___/`,
 `
    /\\_/\\
   (  o.◉ )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ?   |
      \\___/`,
 `
    /\\_/\\
   ( ◉   ◉ )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ?   |
      \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ..  |
      \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
-   \\  ~_~  /
+   \\  ~  /
     | ok  |
      \\___/`,
   ],
@@ -133,77 +133,77 @@ const STEP_FRAMES: string[][] = [
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  -.· )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
   ],
@@ -213,98 +213,98 @@ const STEP_FRAMES: string[][] = [
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   v   /
+   \\  v  /
     |.hmm.|
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
-  ( ·.· )
+  (  ·.· )
   ( =   = )
-   \\   v   /
+   \\  v  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   v   /
+   \\  v  /
     |.hmm.|
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |.hmm.|
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | ... |
      \\___/`,
 `
    /\\_/\\
-  ( ·.· )
+  (  ·.· )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | hmm |
      \\___/`,
 `
    /\\_/\\
   (  v.v )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |.hmm.|
      \\___/`,
 `
    /\\_/\\
   ( '..' )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | hmm |
      \\___/`,
   ],
@@ -312,100 +312,100 @@ const STEP_FRAMES: string[][] = [
   [
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( o _ O )
+  (  o.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ o )
+  (  O.o )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!!!!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | !! |
      \\___/`,
 `
    /\\_/\\
-  ( o _ o )
+  (  o.o )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!!!!|
      \\___/`,
 `
    /\\_/\\
-  ( o _ O )
+  (  o.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ o )
+  (  O.o )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | !! |
      \\___/`,
 `
    /\\_/\\
-  ( ! _ ! )
+  (  !.! )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!!!!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( o _ o )
+  (  o.o )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     | !! |
      \\___/`,
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!!!!|
      \\___/`,
 `
    /\\_/\\
-  ( o _ O )
+  (  o.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!wtf!|
      \\___/`,
 `
    /\\_/\\
-  ( O _ O )
+  (  O.O )
   ( =   = )
-   \\   ↓   /
+   \\  ↓  /
     |!!!!|
      \\___/`,
   ],
@@ -415,98 +415,98 @@ const STEP_FRAMES: string[][] = [
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   ( -_-' )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   ( ._.' )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   ( -_-' )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   ( ._.' )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
 `
    /\\_/\\
   ( -_-' )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |.... |
      \\___/`,
 `
    /\\_/\\
   (  -_- )
   ( =   = )
-   \\   >   /
+   \\  >  /
     |sigh.|
      \\___/`,
   ],
@@ -516,98 +516,98 @@ const STEP_FRAMES: string[][] = [
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  u.- )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  o.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  u.◉ )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |done.|
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  u.- )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |done.|
      \\___/`,
 `
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     | ... |
      \\___/`,
 `
    /\\_/\\
   (  ◉.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
 `
    /\\_/\\
   (  u.u )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |done.|
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
-   \\  -.-  /
+   \\  -  /
     |fine.|
      \\___/`,
   ],
@@ -643,12 +643,12 @@ function rlIncr() {
 }
 
 const PROG_STEPS = [
-  { pct: 10, label: 'Connecting to GitHub...', ms: 300,   frame: 0 },
-  { pct: 25, label: 'Fetching repository...',  ms: 1500,  frame: 1 },
-  { pct: 45, label: 'Packing files...',         ms: 4000,  frame: 2 },
-  { pct: 60, label: 'Running security scan...', ms: 8000,  frame: 3 },
-  { pct: 78, label: 'Analyzing with Claude...', ms: 16000, frame: 4 },
-  { pct: 90, label: 'Writing verdict...',        ms: 32000, frame: 5 },
+  { pct: 10, label: 'Connecting to GitHub...', ms: 300,   frame: 0, subInt: 300 },
+  { pct: 25, label: 'Fetching repository...',  ms: 1500,  frame: 1, subInt: 340 },
+  { pct: 45, label: 'Packing files...',         ms: 4000,  frame: 2, subInt: 320 },
+  { pct: 60, label: 'Running security scan...', ms: 8000,  frame: 3, subInt: 150 },
+  { pct: 78, label: 'Analyzing with Claude...', ms: 16000, frame: 4, subInt: 400 },
+  { pct: 90, label: 'Writing verdict...',        ms: 32000, frame: 5, subInt: 360 },
 ];
 
 const MODES: { key: string; ico: ReactNode; nm: string; ds: string }[] = [
@@ -694,31 +694,33 @@ export default function RoastPage() {
     setGfFrame(STEP_FRAMES[0][0]);
     setGfKey(0);
 
-    // Sub-frame at 140ms — direct swap, no transition, sprite-sheet style
     let sf = 0;
-    subFrameTimer.current = setInterval(() => {
-      sf++;
-      const step = stepIdxRef.current;
-      const frames = STEP_FRAMES[step];
-      setGfFrame(frames[sf % frames.length]);
-    }, 140);
 
-    // Message cycling
+    function startSubFrames(frameIdx: number, interval: number) {
+      if (subFrameTimer.current) clearInterval(subFrameTimer.current);
+      sf = 0;
+      subFrameTimer.current = setInterval(() => {
+        sf++;
+        setGfFrame(STEP_FRAMES[frameIdx][sf % STEP_FRAMES[frameIdx].length]);
+      }, interval);
+    }
+
+    startSubFrames(0, PROG_STEPS[0].subInt);
+
     let mi = 0;
     loaderRef.current = setInterval(() => {
       mi = (mi + 1) % MSGS.length;
       setGfMsg(MSGS[mi]);
     }, 1400);
 
-    // Progress steps — change expression + trigger pop-in
-    progTimers.current = PROG_STEPS.map(({ pct, label, ms, frame }) =>
+    progTimers.current = PROG_STEPS.map(({ pct, label, ms, frame, subInt }) =>
       setTimeout(() => {
         setProgress(pct);
         setStepLabel(label);
         stepIdxRef.current = frame;
-        sf = 0;
         setGfFrame(STEP_FRAMES[frame][0]);
         setGfKey(k => k + 1);
+        startSubFrames(frame, subInt);
       }, ms)
     );
   }
