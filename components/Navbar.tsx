@@ -8,7 +8,7 @@ export default function Navbar() {
       <div className="nav-logo" onClick={() => router.push('/')}>
         <span className="logo-icon">ᗢ</span>
         GARFIELD ROAST
-        <span className="nav-claude-badge">DEEPSEEK</span>
+        <span className="nav-claude-badge">CLAUDE</span>
       </div>
       <div className="nav-links">
         <span className="nav-link" onClick={() => router.push('/roast')}>ROAST REPO</span>

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     Accept: 'application/vnd.github.v3+json',
     'User-Agent': 'garfield-roast/1.0',
   };
-  const ghToken = process.env.GITHUB_TOKEN ?? '';
+  const ghToken = (process.env.GITHUB_TOKEN ?? '').trim();
   if (ghToken && !ghToken.includes('...') && ghToken.length > 15) {
     headers['Authorization'] = `token ${ghToken}`;
   }
