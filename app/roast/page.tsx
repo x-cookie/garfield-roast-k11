@@ -3,34 +3,49 @@ import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconFlame, IconSmirk, IconLeaf, IconFolder, IconMoon, IconWarning } from '../icons';
 
+// One frame per PROG_STEP — Garfield's reaction escalates with the scan
 const GF_FRAMES = [
-`
-   /\\_/\\
-  (  u.u )
-  ( =   = )
-   \\  ω  /
-    |ZZzZ|
-     \\___/`,
-`
-   /\\_/\\
-  (  -.- )
-  ( =   = )
-   \\  ω  /
-    | ??? |
-     \\___/`,
 `
    /\\_/\\
   (  o.o )
   ( =   = )
    \\  ω  /
-    |.....|
+    | ok..|
      \\___/`,
 `
    /\\_/\\
   (  -.- )
   ( =   = )
+   \\  ω  /
+    | ... |
+     \\___/`,
+`
+   /\\_/\\
+  (  >.< )
+  ( =   = )
+   \\  ω  /
+    | hmm |
+     \\___/`,
+`
+   /\\_/\\
+  ( O _ O )
+  ( =   = )
+   \\  !  /
+    |wtf.|
+     \\___/`,
+`
+   /\\_/\\
+  (  -_- )
+  ( =   = )
    \\  >  /
     |*sigh|
+     \\___/`,
+`
+   /\\_/\\
+  (  u.u )
+  ( =   = )
+   \\  ω  /
+    |fine.|
      \\___/`,
 ];
 
@@ -64,12 +79,12 @@ function rlIncr() {
 }
 
 const PROG_STEPS = [
-  { pct: 10, label: 'Connecting to GitHub...', ms: 300 },
-  { pct: 25, label: 'Fetching repository...', ms: 1500 },
-  { pct: 45, label: 'Packing files...', ms: 4000 },
-  { pct: 60, label: 'Running security scan...', ms: 8000 },
-  { pct: 78, label: 'Analyzing with Claude...', ms: 16000 },
-  { pct: 90, label: 'Writing verdict...', ms: 32000 },
+  { pct: 10, label: 'Connecting to GitHub...', ms: 300,   frame: 0 },
+  { pct: 25, label: 'Fetching repository...',  ms: 1500,  frame: 1 },
+  { pct: 45, label: 'Packing files...',         ms: 4000,  frame: 2 },
+  { pct: 60, label: 'Running security scan...', ms: 8000,  frame: 3 },
+  { pct: 78, label: 'Analyzing with Claude...', ms: 16000, frame: 4 },
+  { pct: 90, label: 'Writing verdict...',        ms: 32000, frame: 5 },
 ];
 
 const MODES: { key: string; ico: ReactNode; nm: string; ds: string }[] = [
@@ -89,6 +104,7 @@ export default function RoastPage() {
   const [rlWarn, setRlWarn] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [gfFrame, setGfFrame] = useState(GF_FRAMES[0]);
+  const [gfKey, setGfKey] = useState(0);
   const [gfMsg, setGfMsg] = useState(MSGS[0]);
   const [progress, setProgress] = useState(0);
   const [stepLabel, setStepLabel] = useState('');
@@ -107,15 +123,20 @@ export default function RoastPage() {
     setLoading(true);
     setProgress(0);
     setStepLabel('Starting...');
-    let fi = 0, mi = 0;
+    setGfFrame(GF_FRAMES[0]);
+    setGfKey(0);
+    let mi = 0;
     loaderRef.current = setInterval(() => {
-      fi = Math.min(fi + 1, 3);
       mi = (mi + 1) % MSGS.length;
-      setGfFrame(GF_FRAMES[fi]);
       setGfMsg(MSGS[mi]);
-    }, 750);
-    progTimers.current = PROG_STEPS.map(({ pct, label, ms }) =>
-      setTimeout(() => { setProgress(pct); setStepLabel(label); }, ms)
+    }, 1400);
+    progTimers.current = PROG_STEPS.map(({ pct, label, ms, frame }) =>
+      setTimeout(() => {
+        setProgress(pct);
+        setStepLabel(label);
+        setGfFrame(GF_FRAMES[frame]);
+        setGfKey(k => k + 1);
+      }, ms)
     );
   }
 
@@ -127,6 +148,7 @@ export default function RoastPage() {
     setProgress(0);
     setStepLabel('');
     setGfFrame(GF_FRAMES[0]);
+    setGfKey(0);
     setGfMsg(MSGS[0]);
   }
 
@@ -280,7 +302,7 @@ export default function RoastPage() {
 
         {loading && (
           <div className="gf-loader show">
-            <pre className="gf-anim">{gfFrame}</pre>
+            <pre key={gfKey} className="gf-anim">{gfFrame}</pre>
             <div className="gf-step-info">
               <span>{stepLabel}</span>
               <span className="gf-step-pct">{progress}%</span>

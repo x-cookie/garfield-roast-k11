@@ -19,6 +19,27 @@ const HERO_FRAMES = [
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
+  (  -.- )
+  ( = ◉ = )
+   \\  ω  /
+    | ... |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  ( ◉   ◉ )
+  ( = · = )
+   \\  ~  /
+    |.....|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -_- )
+  ( = · = )
+   \\  ω  /
+    | meh |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
   (  u.u )
   ( = · = )
    \\  ω  /
@@ -70,11 +91,15 @@ export default function LandingPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (heroRef.current) {
+      const el = heroRef.current;
+      if (!el) return;
+      el.style.opacity = '0';
+      setTimeout(() => {
         frameIdx.current = (frameIdx.current + 1) % HERO_FRAMES.length;
-        heroRef.current.textContent = HERO_FRAMES[frameIdx.current];
-      }
-    }, 1800);
+        el.textContent = HERO_FRAMES[frameIdx.current];
+        el.style.opacity = '1';
+      }, 300);
+    }, 3200);
     return () => clearInterval(interval);
   }, []);
 
