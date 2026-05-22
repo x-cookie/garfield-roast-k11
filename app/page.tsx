@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { IconFlame, IconLink, IconCat, IconShare } from './icons';
 
 const HERO_FRAMES = [
 `   /\\___/\\
@@ -91,6 +92,19 @@ export default function LandingPage() {
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add('revealed');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <div id="landing">
 
@@ -98,7 +112,7 @@ export default function LandingPage() {
         <pre className="hero-ascii" ref={heroRef}>{HERO_FRAMES[0]}</pre>
 
         <div className="hero-eyebrow">
-          <span className="tag">[ GARFIELD ROAST · POWERED BY DEEPSEEK ]</span>
+          <span className="tag">[ GARFIELD ROAST · POWERED BY CLAUDE ]</span>
         </div>
 
         <h1 className="hero-title">
@@ -114,7 +128,8 @@ export default function LandingPage() {
 
         <div className="hero-actions">
           <button className="btn btn-primary btn-hero" onClick={() => router.push('/roast')}>
-            🔥 ROAST MY REPO
+            <IconFlame size={16} />
+            ROAST MY REPO
           </button>
           <button className="btn btn-outline btn-hero">
             SEE AN EXAMPLE →
@@ -123,7 +138,7 @@ export default function LandingPage() {
 
         <div className="powered-pill">
           <span className="powered-dot"></span>
-          POWERED BY DEEPSEEK · OPENROUTER
+          POWERED BY CLAUDE
         </div>
 
         <div className="hero-stats">
@@ -143,27 +158,27 @@ export default function LandingPage() {
 
       <div style={{ borderTop: '1px solid var(--border)' }}>
         <div className="section">
-          <div className="section-eyebrow">
+          <div className="section-eyebrow" data-reveal>
             <span className="tag">[ HOW IT WORKS ]</span>
             <h2 className="section-title">Three steps to<br />code humiliation.</h2>
             <p className="section-desc">Garfield wakes up, reads your repo, and delivers the verdict. He&apos;s done this in his sleep. Literally.</p>
           </div>
           <div className="steps">
-            <div className="step-card">
+            <div className="step-card" data-reveal data-delay="1">
               <div className="step-n">01 /</div>
-              <span className="step-icon">🔗</span>
+              <span className="step-icon"><IconLink size={28} /></span>
               <div className="step-title">Paste your GitHub URL</div>
               <p className="step-text">Drop any public GitHub repo link. We fetch the files, scan the structure, and wake Garfield up from his third nap of the day.</p>
             </div>
-            <div className="step-card">
+            <div className="step-card" data-reveal data-delay="2">
               <div className="step-n">02 /</div>
-              <span className="step-icon">😼</span>
+              <span className="step-icon"><IconCat size={28} /></span>
               <div className="step-title">Garfield reads your code</div>
-              <p className="step-text">Powered by DeepSeek via OpenRouter, Garfield analyzes architecture, naming, patterns, and tech debt. He&apos;s seen worse. Not by much though.</p>
+              <p className="step-text">Powered by Claude, Garfield analyzes architecture, naming, patterns, and tech debt. He&apos;s seen worse. Not by much though.</p>
             </div>
-            <div className="step-card">
+            <div className="step-card" data-reveal data-delay="3">
               <div className="step-n">03 /</div>
-              <span className="step-icon">📤</span>
+              <span className="step-icon"><IconShare size={28} /></span>
               <div className="step-title">Share the carnage</div>
               <p className="step-text">Get a shareable roast card, screenshot-ready for X. Because your suffering is content, and content is king.</p>
             </div>
@@ -179,7 +194,7 @@ export default function LandingPage() {
           </div>
           <div className="ex-scroll">
             {EXAMPLE_ROASTS.map(({ repo, text, badge }, i) => (
-              <div key={i} className="ex-card">
+              <div key={i} className="ex-card" data-reveal data-delay={String(i + 1)}>
                 <div className="ex-repo">{repo}</div>
                 <p className="ex-text">{text}</p>
                 <span className="ex-badge">{badge}</span>
@@ -189,7 +204,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="cta-bottom">
+      <div className="cta-bottom" data-reveal>
         <span className="tag" style={{ marginBottom: '24px', display: 'inline-block' }}>[ GET STARTED ]</span>
         <h2 style={{ fontSize: 'clamp(28px,4vw,52px)', fontWeight: 800, marginBottom: '14px' }}>
           Ready to be<br />brutally honest?
@@ -198,12 +213,13 @@ export default function LandingPage() {
           3 free roasts per day. No account needed. Just a GitHub URL and a thick skin.
         </p>
         <button className="btn btn-primary" style={{ padding: '16px 44px', fontSize: '13.5px' }} onClick={() => router.push('/roast')}>
-          🔥 ROAST MY REPO NOW
+          <IconFlame size={16} />
+          ROAST MY REPO NOW
         </button>
       </div>
 
       <footer className="footer">
-        <span>GARFIELD ROAST · POWERED BY <span>DEEPSEEK (OPENROUTER)</span></span>
+        <span>GARFIELD ROAST · POWERED BY <span>CLAUDE</span></span>
         <span style={{ color: 'var(--text-3)' }}>GITHUB · X (TWITTER)</span>
         <span>© 2025 · NOT AFFILIATED WITH GARFIELD™</span>
       </footer>

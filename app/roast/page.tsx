@@ -1,6 +1,7 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { IconFlame, IconSmirk, IconLeaf, IconFolder, IconMoon, IconWarning } from '../icons';
 
 const GF_FRAMES = [
 `
@@ -62,10 +63,10 @@ function rlIncr() {
   localStorage.setItem('_gr', JSON.stringify({ d: today, n: d.d === today ? d.n + 1 : 1 }));
 }
 
-const MODES = [
-  { key: 'savage', ico: '🔥', nm: 'SAVAGE', ds: 'No mercy. Pure truth.' },
-  { key: 'snarky', ico: '😏', nm: 'SNARKY', ds: 'Witty. Still stings.' },
-  { key: 'gentle', ico: '🤝', nm: 'GENTLE', ds: 'Honest. Kinder.' },
+const MODES: { key: string; ico: ReactNode; nm: string; ds: string }[] = [
+  { key: 'savage', ico: <IconFlame size={22} />, nm: 'SAVAGE', ds: 'No mercy. Pure truth.' },
+  { key: 'snarky', ico: <IconSmirk size={22} />, nm: 'SNARKY', ds: 'Witty. Still stings.' },
+  { key: 'gentle', ico: <IconLeaf size={22} />, nm: 'GENTLE', ds: 'Honest. Kinder.' },
 ];
 
 export default function RoastPage() {
@@ -77,6 +78,7 @@ export default function RoastPage() {
   const [chipData, setChipData] = useState({ name: '—', lang: '—', stars: '— ⭐', files: '— files' });
   const [loading, setLoading] = useState(false);
   const [rlWarn, setRlWarn] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [gfFrame, setGfFrame] = useState(GF_FRAMES[0]);
   const [gfMsg, setGfMsg] = useState(MSGS[0]);
   const metaRef = useRef<Record<string, unknown> | null>(null);
@@ -110,7 +112,13 @@ export default function RoastPage() {
   async function loadRepoMeta(r: string) {
     try {
       const res = await fetch(`/api/repo-meta?repo=${r}`);
-      if (!res.ok) throw new Error('not found');
+      if (!res.ok) {
+        setInputState('state-bad');
+        setChipVisible(false);
+        if (res.status === 404) setErrorMsg('Repository not found. Make sure it\'s public and the URL is correct.');
+        return;
+      }
+      setErrorMsg('');
       const d = await res.json();
       metaRef.current = d;
       setChipData({ name: d.name, lang: d.language || '—', stars: `${(d.stars || 0).toLocaleString()} ⭐`, files: '— files' });
@@ -139,6 +147,7 @@ export default function RoastPage() {
   function handleUrlChange(v: string) {
     const clean = v.replace(/https?:\/\/(www\.)?github\.com\//, '').replace(/\/$/, '').trim();
     setRepo(clean);
+    setErrorMsg('');
     const ok = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(clean);
     setInputState(ok ? 'state-ok' : clean.length > 4 ? 'state-bad' : '');
     if (!ok) { setChipVisible(false); return; }
@@ -149,6 +158,7 @@ export default function RoastPage() {
   async function doRoast() {
     if (!rlCheck()) { setRlWarn(true); return; }
     if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) { setInputState('state-bad'); return; }
+    setErrorMsg('');
     startLoader();
     try {
       const res = await fetch('/api/roast', {
@@ -157,7 +167,8 @@ export default function RoastPage() {
         body: JSON.stringify({ repoUrl: repo, mode }),
       });
       if (res.status === 429) { stopLoader(); setRlWarn(true); return; }
-      if (!res.ok) throw new Error(`API error ${res.status}`);
+      if (res.status === 422) { stopLoader(); setErrorMsg('Could not fetch this repository. Make sure it\'s public and not empty.'); return; }
+      if (!res.ok) { stopLoader(); setErrorMsg('Something went wrong. Try again in a moment.'); return; }
       const result = await res.json();
       rlIncr();
       sessionStorage.setItem('garfield_result', JSON.stringify({
@@ -169,6 +180,7 @@ export default function RoastPage() {
     } catch (e) {
       console.error(e);
       stopLoader();
+      setErrorMsg('Network error. Check your connection and try again.');
     }
   }
 
@@ -188,6 +200,7 @@ export default function RoastPage() {
             type="text"
             className={`url-input ${inputState}`}
             placeholder="username/repository-name"
+            value={repo}
             onChange={e => handleUrlChange(e.target.value)}
             autoComplete="off"
             autoCorrect="off"
@@ -197,7 +210,7 @@ export default function RoastPage() {
 
         {chipVisible && (
           <div className="repo-chip show">
-            <span style={{ fontSize: '20px' }}>📁</span>
+            <IconFolder size={20} />
             <div style={{ flex: 1 }}>
               <div className="chip-name">{chipData.name}</div>
               <div className="chip-meta">
@@ -223,12 +236,20 @@ export default function RoastPage() {
 
         {rlWarn && (
           <div className="rl-warn show">
-            ⚠ You&apos;ve used all 3 free roasts today. Come back tomorrow.
+            <IconWarning size={14} />
+            You&apos;ve used all 3 free roasts today. Come back tomorrow.
+          </div>
+        )}
+
+        {errorMsg && (
+          <div className="rl-warn show" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}>
+            <IconWarning size={14} />
+            {errorMsg}
           </div>
         )}
 
         <button className="btn btn-primary submit-btn" disabled={loading} onClick={doRoast}>
-          {loading ? '😴 Garfield is waking up...' : '🔥 ROAST IT'}
+          {loading ? <><IconMoon size={14} /> Garfield is waking up...</> : <><IconFlame size={14} /> ROAST IT</>}
         </button>
 
         {loading && (

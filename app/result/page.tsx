@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { IconFolder, IconFile } from '../icons';
 
 declare const html2canvas: (el: HTMLElement, opts: Record<string, unknown>) => Promise<HTMLCanvasElement>;
 
@@ -123,7 +124,7 @@ export default function ResultPage() {
 
       <div className="result-bar">
         <div className="res-left">
-          <span>📁</span>
+          <IconFolder size={15} />
           <span className="res-repo">{repo}</span>
           <span className="res-badge">{mode.toUpperCase()} MODE</span>
         </div>
@@ -182,7 +183,7 @@ export default function ResultPage() {
             <pre className="rp-gf">{` /\\_/\\\n(-  -)\n(= · =)\n \\___/`}</pre>
             <div>
               <div className="rp-title">GARFIELD&apos;S VERDICT</div>
-              <div className="rp-sub">Powered by DeepSeek · OpenRouter</div>
+              <div className="rp-sub">Powered by Claude</div>
             </div>
           </div>
 
@@ -199,7 +200,7 @@ export default function ResultPage() {
                 className={`ritem ${mode === 'gentle' ? 'gentle' : ''}`}
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
-                <div className="ri-file">📄 <span>{item.file}</span></div>
+                <div className="ri-file"><IconFile size={11} /><span>{item.file}</span></div>
                 <div className="ri-text">{item.text}</div>
                 <span className={`ri-sev sev-${item.severity[0]}`}>{item.severity.toUpperCase()}</span>
               </div>
