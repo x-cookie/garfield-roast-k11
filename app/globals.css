@@ -274,7 +274,7 @@ body {
   width: 100%;
   background: var(--bg-card); border: 1px solid var(--border-hi);
   color: var(--text); font-family: var(--font); font-size: 13.5px;
-  padding: 17px 17px 17px 72px; outline: none;
+  padding: 17px 17px 17px 102px; outline: none;
   transition: border-color 0.15s;
 }
 .url-input::placeholder { color: var(--text-3); }
