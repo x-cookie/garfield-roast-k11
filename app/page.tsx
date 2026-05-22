@@ -4,9 +4,40 @@ import { useRouter } from 'next/navigation';
 import { IconFlame, IconLink, IconCat, IconShare } from './icons';
 import HeroParticles from './components/HeroParticles';
 
-// 12 frames — cycles at 350ms = ~4.2s full loop, creates illusion of movement
+// 24 frames at 110ms = ~2.6s loop — small incremental changes = true animation feel
+// No opacity fade. Direct swap only. Like a real sprite sheet.
 const HERO_FRAMES = [
+// ── Sleep breathing: Z's drift upward ──
 `   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |ZZzZ|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |_ZZz|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |__ZZ|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |ZZzZ|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+// ── Ear twitch ──
+`  ./\\___/\\
   (  -.- )
   ( = · = )
    \\  ω  /
@@ -20,31 +51,57 @@ const HERO_FRAMES = [
     | ZZz|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
+// ── Stir: one eye opens ──
 `   /\\___/\\
-  (  -.- )
+  (  u.- )
   ( = · = )
    \\  ω  /
-    |zZZ.|
+    |Zzz.|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
-  (  --- )
+  (  u.u )
   ( = · = )
    \\  ω  /
-    | ... |
+    |..zZ|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
+// ── Half open ──
 `   /\\___/\\
-  (  -'- )
+  (  -,- )
   ( = · = )
    \\  ω  /
-    | ... |
+    |....|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
+// ── Fully awake ──
 `   /\\___/\\
   (  o.o )
   ( = · = )
    \\  ω  /
+    |.....|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+// ── Look around ──
+`   /\\___/\\
+  (  o.◉ )
+  ( = · = )
+   \\  ω  /
+    |.....|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  ◉.o )
+  ( = · = )
+   \\  ω  /
+    |.....|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+// ── Judge ──
+`   /\\___/\\
+  ( ◉   ◉ )
+  ( = · = )
+   \\  ~  /
     |.....|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
@@ -70,24 +127,61 @@ const HERO_FRAMES = [
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
-  (  -'- )
+  (  -_- )
   ( = · = )
    \\  ω  /
-    |Zzz..|
+    | meh |
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+// ── Closing ──
+`   /\\___/\\
+  (  -,- )
+  ( = · = )
+   \\  ω  /
+    |Zzz.|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
   (  u.- )
   ( = · = )
    \\  ω  /
-    |.zZ..|
+    |.Zzz|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 `   /\\___/\\
   (  u.u )
   ( = · = )
    \\  ω  /
-    |..zZ.|
+    |..Zz|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+// ── Back to sleep ──
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |ZZzZ|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |_ZZz|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |__ZZ|
+     \\___/
+  ▓▓▓▓▓▓▓▓▓`,
+`   /\\___/\\
+  (  -.- )
+  ( = · = )
+   \\  ω  /
+    |ZZzZ|
      \\___/
   ▓▓▓▓▓▓▓▓▓`,
 ];
@@ -134,16 +228,13 @@ export default function LandingPage() {
   const frameIdx = useRef(0);
 
   useEffect(() => {
+    // Direct swap at 110ms — no fade, pure frame animation like a sprite sheet
     const interval = setInterval(() => {
       const el = heroRef.current;
       if (!el) return;
-      el.style.opacity = '0';
-      setTimeout(() => {
-        frameIdx.current = (frameIdx.current + 1) % HERO_FRAMES.length;
-        el.textContent = HERO_FRAMES[frameIdx.current];
-        el.style.opacity = '1';
-      }, 140);
-    }, 350);
+      frameIdx.current = (frameIdx.current + 1) % HERO_FRAMES.length;
+      el.textContent = HERO_FRAMES[frameIdx.current];
+    }, 110);
     return () => clearInterval(interval);
   }, []);
 

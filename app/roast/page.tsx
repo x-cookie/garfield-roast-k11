@@ -3,10 +3,10 @@ import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconFlame, IconSmirk, IconLeaf, IconFolder, IconMoon, IconWarning } from '../icons';
 
-// Sub-frame arrays per PROG_STEP — cycles at 250ms to create living animation
-// Eyes shift DOWN progressively as scan deepens (Garfield watches the progress bar below)
+// STEP_FRAMES[stepIdx][subFrame] — 4-6 sub-frames per step, direct swap at 140ms
+// Eyes physically move DOWN as scan deepens — Garfield watches his own loading bar
 const STEP_FRAMES: string[][] = [
-  // Step 0 — Waking up, curious, eyes scan left↔right
+  // Step 0 — Waking up: eyes scan left and right
   [
 `
    /\\_/\\
@@ -17,20 +17,34 @@ const STEP_FRAMES: string[][] = [
      \\___/`,
 `
    /\\_/\\
-  (  o.O )
+  (  o.◉ )
   ( =   = )
    \\  ω  /
     | ok  |
      \\___/`,
 `
    /\\_/\\
-  (  O.o )
+  (  o.o )
   ( =   = )
    \\  ω  /
     | ok  |
      \\___/`,
+`
+   /\\_/\\
+  (  ◉.o )
+  ( =   = )
+   \\  ω  /
+    | ok  |
+     \\___/`,
+`
+   /\\_/\\
+  (  o.o )
+  ( =   = )
+   \\  ω  /
+    | ..  |
+     \\___/`,
   ],
-  // Step 1 — Reading, starting to look down
+  // Step 1 — Fetching: starting to look down (eye position shifts)
   [
 `
    /\\_/\\
@@ -46,8 +60,22 @@ const STEP_FRAMES: string[][] = [
    \\  ω  /
     | ... |
      \\___/`,
+`
+   /\\_/\\
+  (  -.- )
+  ( =   = )
+   \\  ω  /
+    | ... |
+     \\___/`,
+`
+   /\\_/\\
+  ( '..' )
+  ( =   = )
+   \\  v  /
+    | ... |
+     \\___/`,
   ],
-  // Step 2 — Looking DOWN at progress bar (v = downward gaze)
+  // Step 2 — Packing: fully looking DOWN at progress bar
   [
 `
    /\\_/\\
@@ -70,8 +98,22 @@ const STEP_FRAMES: string[][] = [
    \\  v  /
     |.hmm.|
      \\___/`,
+`
+   /\\_/\\
+  (  v.v )
+  ( =   = )
+   \\  v  /
+    | ... |
+     \\___/`,
+`
+   /\\_/\\
+  ( '..' )
+  ( =   = )
+   \\  v  /
+    | hmm |
+     \\___/`,
   ],
-  // Step 3 — HORRIFIED by what he sees (eyes wide, staring DOWN)
+  // Step 3 — Security scan: HORRIFIED, eyes dart left-right in shock
   [
 `
    /\\_/\\
@@ -92,10 +134,24 @@ const STEP_FRAMES: string[][] = [
   ( O _ o )
   ( =   = )
    \\  ↓  /
+    |!!!!|
+     \\___/`,
+`
+   /\\_/\\
+  ( O _ O )
+  ( =   = )
+   \\  ↓  /
     | ... |
      \\___/`,
+`
+   /\\_/\\
+  ( o _ o )
+  ( =   = )
+   \\  ↓  /
+    |!wtf!|
+     \\___/`,
   ],
-  // Step 4 — Resigned, still looking down
+  // Step 4 — Analyzing: resigned, slow head movement
   [
 `
    /\\_/\\
@@ -111,8 +167,22 @@ const STEP_FRAMES: string[][] = [
    \\  >  /
     |sigh.|
      \\___/`,
+`
+   /\\_/\\
+  (  -_- )
+  ( =   = )
+   \\  >  /
+    |.... |
+     \\___/`,
+`
+   /\\_/\\
+  ( ._.' )
+  ( =   = )
+   \\  >  /
+    |sigh.|
+     \\___/`,
   ],
-  // Step 5 — Writing verdict, glancing back up
+  // Step 5 — Writing verdict: glancing back up, almost smug
   [
 `
    /\\_/\\
@@ -134,6 +204,20 @@ const STEP_FRAMES: string[][] = [
   ( =   = )
    \\  ω  /
     |fine.|
+     \\___/`,
+`
+   /\\_/\\
+  (  o.u )
+  ( =   = )
+   \\  ω  /
+    |fine.|
+     \\___/`,
+`
+   /\\_/\\
+  (  u.u )
+  ( =   = )
+   \\  ω  /
+    | ... |
      \\___/`,
   ],
 ];
@@ -219,14 +303,14 @@ export default function RoastPage() {
     setGfFrame(STEP_FRAMES[0][0]);
     setGfKey(0);
 
-    // Sub-frame animation at 250ms — creates living animation within each step
+    // Sub-frame at 140ms — direct swap, no transition, sprite-sheet style
     let sf = 0;
     subFrameTimer.current = setInterval(() => {
       sf++;
       const step = stepIdxRef.current;
       const frames = STEP_FRAMES[step];
       setGfFrame(frames[sf % frames.length]);
-    }, 250);
+    }, 140);
 
     // Message cycling
     let mi = 0;
@@ -412,7 +496,7 @@ export default function RoastPage() {
 
         {loading && (
           <div className="gf-loader show">
-            <pre key={gfKey} className="gf-anim">{gfFrame}</pre>
+            <pre className="gf-anim">{gfFrame}</pre>
             <div className="gf-step-info">
               <span>{stepLabel}</span>
               <span className="gf-step-pct">{progress}%</span>
