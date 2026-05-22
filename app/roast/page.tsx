@@ -63,6 +63,15 @@ function rlIncr() {
   localStorage.setItem('_gr', JSON.stringify({ d: today, n: d.d === today ? d.n + 1 : 1 }));
 }
 
+const PROG_STEPS = [
+  { pct: 10, label: 'Connecting to GitHub...', ms: 300 },
+  { pct: 25, label: 'Fetching repository...', ms: 1500 },
+  { pct: 45, label: 'Packing files...', ms: 4000 },
+  { pct: 60, label: 'Running security scan...', ms: 8000 },
+  { pct: 78, label: 'Analyzing with Claude...', ms: 16000 },
+  { pct: 90, label: 'Writing verdict...', ms: 32000 },
+];
+
 const MODES: { key: string; ico: ReactNode; nm: string; ds: string }[] = [
   { key: 'savage', ico: <IconFlame size={22} />, nm: 'SAVAGE', ds: 'No mercy. Pure truth.' },
   { key: 'snarky', ico: <IconSmirk size={22} />, nm: 'SNARKY', ds: 'Witty. Still stings.' },
@@ -81,10 +90,13 @@ export default function RoastPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [gfFrame, setGfFrame] = useState(GF_FRAMES[0]);
   const [gfMsg, setGfMsg] = useState(MSGS[0]);
+  const [progress, setProgress] = useState(0);
+  const [stepLabel, setStepLabel] = useState('');
   const metaRef = useRef<Record<string, unknown> | null>(null);
   const filesRef = useRef<{ path: string; type: string }[]>([]);
   const loaderRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => () => {
     if (loaderRef.current) clearInterval(loaderRef.current);
@@ -93,6 +105,8 @@ export default function RoastPage() {
 
   function startLoader() {
     setLoading(true);
+    setProgress(0);
+    setStepLabel('Starting...');
     let fi = 0, mi = 0;
     loaderRef.current = setInterval(() => {
       fi = Math.min(fi + 1, 3);
@@ -100,11 +114,18 @@ export default function RoastPage() {
       setGfFrame(GF_FRAMES[fi]);
       setGfMsg(MSGS[mi]);
     }, 750);
+    progTimers.current = PROG_STEPS.map(({ pct, label, ms }) =>
+      setTimeout(() => { setProgress(pct); setStepLabel(label); }, ms)
+    );
   }
 
   function stopLoader() {
     if (loaderRef.current) clearInterval(loaderRef.current);
+    progTimers.current.forEach(clearTimeout);
+    progTimers.current = [];
     setLoading(false);
+    setProgress(0);
+    setStepLabel('');
     setGfFrame(GF_FRAMES[0]);
     setGfMsg(MSGS[0]);
   }
@@ -255,6 +276,13 @@ export default function RoastPage() {
         {loading && (
           <div className="gf-loader show">
             <pre className="gf-anim">{gfFrame}</pre>
+            <div className="gf-step-info">
+              <span>{stepLabel}</span>
+              <span className="gf-step-pct">{progress}%</span>
+            </div>
+            <div className="gf-progress-track">
+              <div className="gf-progress-fill" style={{ width: `${progress}%` }} />
+            </div>
             <div className="gf-msg">{gfMsg}</div>
           </div>
         )}

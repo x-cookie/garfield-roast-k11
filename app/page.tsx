@@ -65,6 +65,7 @@ const EXAMPLE_ROASTS = [
 export default function LandingPage() {
   const router = useRouter();
   const heroRef = useRef<HTMLPreElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
   const frameIdx = useRef(0);
 
   useEffect(() => {
@@ -105,10 +106,23 @@ export default function LandingPage() {
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    const hero = heroSectionRef.current;
+    if (!hero) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = hero.getBoundingClientRect();
+      hero.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+      hero.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    };
+    hero.addEventListener('mousemove', onMove);
+    return () => hero.removeEventListener('mousemove', onMove);
+  }, []);
+
   return (
     <div id="landing">
 
-      <section className="hero">
+      <section className="hero" ref={heroSectionRef}>
+        <div className="hero-glow" />
         <pre className="hero-ascii" ref={heroRef}>{HERO_FRAMES[0]}</pre>
 
         <div className="hero-eyebrow">
