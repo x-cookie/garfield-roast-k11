@@ -269,7 +269,12 @@ export default function RoastPage() {
           </div>
         )}
 
-        <button className="btn btn-primary submit-btn" disabled={loading} onClick={doRoast}>
+        <button
+          className="btn btn-primary submit-btn"
+          disabled={loading || (!loading && !chipVisible)}
+          onClick={doRoast}
+          title={!chipVisible && !loading ? 'Enter a valid public GitHub repo first' : undefined}
+        >
           {loading ? <><IconMoon size={14} /> Garfield is waking up...</> : <><IconFlame size={14} /> ROAST IT</>}
         </button>
 
