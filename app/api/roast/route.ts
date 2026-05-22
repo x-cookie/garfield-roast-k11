@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { Redis } from '@upstash/redis';
-import { runRemoteAction } from 'repomix';
-import { readFileSync, statSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { randomUUID } from 'crypto';
 
 const client = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -58,12 +53,17 @@ export async function POST(req: NextRequest) {
     if (cached) return NextResponse.json(cached);
   }
 
-  /* ── 3. Pack repo with repomix ── */
+  /* ── 3. Pack repo via GitHub API (no git binary required) ── */
   let packed: string;
   try {
     packed = await packRepo(repoUrl);
     if (packed.length > 80000) packed = packed.slice(0, 80000) + '\n<!-- TRUNCATED -->';
-  } catch {
+  } catch (e) {
+    const msg = (e as Error).message ?? '';
+    console.error('[roast] packRepo failed:', msg);
+    if (msg === 'rate_limited') {
+      return NextResponse.json({ error: 'rate_limit', message: 'GitHub API rate limit hit.' }, { status: 429 });
+    }
     return NextResponse.json({ error: 'repo_fetch_failed' }, { status: 422 });
   }
 
@@ -105,36 +105,67 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * Packs a remote GitHub repo via repomix into a single XML string.
- * Uses an absolute /tmp path so writeOutputToDisk writes there directly,
- * bypassing the read-only CWD in Vercel serverless environments.
+ * Packs a remote GitHub repo into XML using the GitHub API — no git binary needed.
+ * Works in Vercel Lambda where git clone is unavailable.
  */
 async function packRepo(repoUrl: string): Promise<string> {
-  const outputPath = join(tmpdir(), `garfield-${randomUUID()}.xml`);
-
-  try {
-    await runRemoteAction(`https://github.com/${repoUrl}`, {
-      output: outputPath,
-      style: 'xml',
-      outputShowLineNumbers: true,
-      removeEmptyLines: true,
-      topFilesLen: 10,
-      securityCheck: true,
-      ignore: 'node_modules/**,dist/**,build/**,.next/**,*.lock,*.min.js,*.png,*.jpg,*.gif,*.woff,*.pdf',
-      quiet: true,
-    });
-  } catch (err) {
-    // copyOutputToCurrentDirectory may throw EINVAL when source === dest
-    // (both resolve to the same absolute outputPath). The file was already
-    // written by writeOutputToDisk before the copy runs — verify and continue.
-    let fileExists = false;
-    try { statSync(outputPath); fileExists = true; } catch {}
-    if (!fileExists) throw err;
+  const ghToken = (process.env.GITHUB_TOKEN ?? '').trim();
+  const ghHeaders: Record<string, string> = {
+    Accept: 'application/vnd.github.v3+json',
+    'User-Agent': 'garfield-roast/1.0',
+  };
+  if (ghToken && !ghToken.includes('...') && ghToken.length > 15) {
+    ghHeaders['Authorization'] = `token ${ghToken}`;
   }
 
-  const content = readFileSync(outputPath, 'utf-8');
-  try { rmSync(outputPath); } catch {}
-  return content;
+  // Resolve default branch
+  const metaRes = await fetch(`https://api.github.com/repos/${repoUrl}`, { headers: ghHeaders });
+  if (metaRes.status === 403) throw new Error('rate_limited');
+  if (!metaRes.ok) throw new Error(`meta_fetch_failed:${metaRes.status}`);
+  const meta = await metaRes.json() as { default_branch: string };
+  const branch = meta.default_branch || 'main';
+
+  // Get full recursive file tree
+  const treeRes = await fetch(
+    `https://api.github.com/repos/${repoUrl}/git/trees/${branch}?recursive=1`,
+    { headers: ghHeaders }
+  );
+  if (!treeRes.ok) throw new Error(`tree_fetch_failed:${treeRes.status}`);
+  const treeData = await treeRes.json() as { tree: Array<{ type: string; path: string; size?: number }> };
+
+  const SKIP = [
+    /node_modules\//, /\.git\//, /package-lock\.json$/, /yarn\.lock$/, /pnpm-lock/,
+    /\.min\.js$/, /dist\//, /build\//, /\.next\//,
+    /\.(png|jpg|jpeg|gif|webp|avif|ico|woff|woff2|ttf|eot|pdf|zip|tar|gz|bin|exe)$/i,
+    /\.map$/, /\.lock$/,
+  ];
+  const files = (treeData.tree || [])
+    .filter(f => f.type === 'blob' && !SKIP.some(p => p.test(f.path)) && (f.size ?? 0) < 100_000)
+    .slice(0, 60);
+
+  if (files.length === 0) throw new Error('empty_repo');
+
+  // Fetch file contents in parallel batches of 10
+  const rawBase = `https://raw.githubusercontent.com/${repoUrl}/${branch}`;
+  const sections: string[] = [];
+
+  for (let i = 0; i < files.length; i += 10) {
+    const batch = files.slice(i, i + 10);
+    const results = await Promise.all(
+      batch.map(async f => {
+        try {
+          const r = await fetch(`${rawBase}/${f.path}`);
+          if (!r.ok) return '';
+          const text = await r.text();
+          return `<file path="${f.path}">\n${text.slice(0, 10_000)}\n</file>`;
+        } catch { return ''; }
+      })
+    );
+    sections.push(...results.filter(Boolean));
+  }
+
+  if (sections.length === 0) throw new Error('no_content');
+  return `<repository name="${repoUrl}" branch="${branch}">\n${sections.join('\n\n')}\n</repository>`;
 }
 
 function preScanSecurity(content: string): string[] {
