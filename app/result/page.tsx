@@ -1,6 +1,184 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+
+// 14 frames each. Triggered after all roast items appear.
+const LAUGH_FRAMES = [
+` /\\_/\\
+( ^  ^ )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( x  x )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( ^  x )
+(= D = )
+ \\___/`,
+` /\\_/\\
+( x  ^ )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( ^  ^ )
+(= D = )
+ \\___/`,
+` /\\_/\\
+( x  x )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( ^  x )
+(= D = )
+ \\___/`,
+` /\\_/\\
+( x  ^ )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( ^  ^ )
+(= D = )
+ \\___/`,
+` /\\_/\\
+( x  x )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( ^  ^ )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( x  x )
+(= D = )
+ \\___/`,
+` /\\_/\\
+( ^  x )
+(= ~~~= )
+ \\___/`,
+` /\\_/\\
+( x  ^ )
+(= D = )
+ \\___/`,
+];
+
+const SHOCKED_FRAMES = [
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  o  o )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= O = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  o  O )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  O  o )
+(= O = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  ?  ? )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= O = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= o = )
+ \\___/`,
+` /\\_/\\
+(  o  o )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= O = )
+ \\___/`,
+` /\\_/\\
+(  O  O )
+(= o = )
+ \\___/`,
+];
+
+const IDLE_FRAMES = [
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  . )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  .  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  ◉ )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  ◉  - )
+(= _ = )
+ \\___/`,
+` /\\_/\\
+(  -  - )
+(= _ = )
+ \\___/`,
+];
 import { IconFolder, IconFile } from '../icons';
 
 declare const html2canvas: (el: HTMLElement, opts: Record<string, unknown>) => Promise<HTMLCanvasElement>;
@@ -61,6 +239,9 @@ export default function ResultPage() {
   const [codeLines, setCodeLines] = useState<string[]>([]);
   const [caption, setCaption] = useState('');
   const [visibleItems, setVisibleItems] = useState(0);
+  const [gfFrame, setGfFrame] = useState(IDLE_FRAMES[0]);
+  const gfTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const gfFrameRef = useRef(0);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('garfield_result');
@@ -73,6 +254,22 @@ export default function ResultPage() {
     const id = setInterval(() => { i++; setVisibleItems(i); if (i >= count) clearInterval(id); }, 550);
     return () => clearInterval(id);
   }, [router]);
+
+  useEffect(() => {
+    if (!data) return;
+    const count = data.result?.roastItems?.length || 0;
+    if (visibleItems < count) return;
+    const score = data.result?.score ?? 5;
+    const frames = score <= 3 ? LAUGH_FRAMES : score >= 7 ? SHOCKED_FRAMES : IDLE_FRAMES;
+    const interval = score <= 3 ? 160 : score >= 7 ? 280 : 650;
+    gfFrameRef.current = 0;
+    if (gfTimerRef.current) clearInterval(gfTimerRef.current);
+    gfTimerRef.current = setInterval(() => {
+      gfFrameRef.current = (gfFrameRef.current + 1) % frames.length;
+      setGfFrame(frames[gfFrameRef.current]);
+    }, interval);
+    return () => { if (gfTimerRef.current) clearInterval(gfTimerRef.current); };
+  }, [visibleItems, data]);
 
   async function loadCodeFile(path: string) {
     if (!data) return;
@@ -180,7 +377,7 @@ export default function ResultPage() {
         {/* Roast panel */}
         <div className="rpanel" id="roast-card">
           <div className="rp-head">
-            <pre className="rp-gf">{` /\\_/\\\n(-  -)\n(= · =)\n \\___/`}</pre>
+            <pre className="rp-gf">{gfFrame}</pre>
             <div>
               <div className="rp-title">GARFIELD&apos;S VERDICT</div>
               <div className="rp-sub">Powered by Claude</div>
