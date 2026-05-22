@@ -8,12 +8,20 @@ export async function GET(req: NextRequest) {
     Accept: 'application/vnd.github.v3+json',
     'User-Agent': 'garfield-roast/1.0',
   };
-  if (process.env.GITHUB_TOKEN) {
-    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+  const ghToken = process.env.GITHUB_TOKEN ?? '';
+  if (ghToken && !ghToken.includes('...') && ghToken.length > 15) {
+    headers['Authorization'] = `token ${ghToken}`;
   }
 
   const res = await fetch(`https://api.github.com/repos/${repo}`, { headers });
-  if (!res.ok) return NextResponse.json({ error: 'not_found' }, { status: 404 });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    console.error(`[repo-meta] GitHub ${res.status} for "${repo}": ${body.slice(0, 200)}`);
+    if (res.status === 403) {
+      return NextResponse.json({ error: 'rate_limited', message: 'GitHub rate limit hit — set GITHUB_TOKEN in .env.local' }, { status: 503 });
+    }
+    return NextResponse.json({ error: 'not_found' }, { status: 404 });
+  }
 
   const data = await res.json();
   return NextResponse.json(

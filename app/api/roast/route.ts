@@ -16,9 +16,14 @@ const client = new OpenAI({
   },
 });
 let _redis: Redis | null = null;
-function getRedis(): Redis {
-  if (!_redis) _redis = Redis.fromEnv();
-  return _redis;
+function getRedis(): Redis | null {
+  if (_redis) return _redis;
+  try {
+    const url = process.env.UPSTASH_REDIS_REST_URL ?? '';
+    if (!url || !url.startsWith('https://') || url.includes('...')) return null;
+    _redis = Redis.fromEnv();
+    return _redis;
+  } catch { return null; }
 }
 
 export const maxDuration = 60;
@@ -27,15 +32,18 @@ export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
 
   /* ── 1. Rate limiting ── */
-  const today = new Date().toISOString().split('T')[0];
-  const rlKey = `rl:${ip}:${today}`;
-  const usage = await getRedis().incr(rlKey);
-  if (usage === 1) await getRedis().expire(rlKey, 86400);
-  if (usage > 3) {
-    return NextResponse.json(
-      { error: 'rate_limit', message: '3 roasts/day exceeded' },
-      { status: 429 }
-    );
+  const redis = getRedis();
+  if (redis) {
+    const today = new Date().toISOString().split('T')[0];
+    const rlKey = `rl:${ip}:${today}`;
+    const usage = await redis.incr(rlKey);
+    if (usage === 1) await redis.expire(rlKey, 86400);
+    if (usage > 3) {
+      return NextResponse.json(
+        { error: 'rate_limit', message: '3 roasts/day exceeded' },
+        { status: 429 }
+      );
+    }
   }
 
   const { repoUrl, mode } = await req.json();
@@ -45,8 +53,10 @@ export async function POST(req: NextRequest) {
 
   /* ── 2. Check cache ── */
   const cacheKey = `roast:${repoUrl}:${mode}`;
-  const cached   = await getRedis().get(cacheKey);
-  if (cached) return NextResponse.json(cached);
+  if (redis) {
+    const cached = await redis.get(cacheKey);
+    if (cached) return NextResponse.json(cached);
+  }
 
   /* ── 3. Pack repo with repomix ── */
   let packed: string;
@@ -89,7 +99,7 @@ export async function POST(req: NextRequest) {
   }
 
   /* ── 8. Cache result for 24h ── */
-  await getRedis().setex(cacheKey, 86400, result);
+  if (redis) await redis.setex(cacheKey, 86400, result);
 
   return NextResponse.json(result);
 }
