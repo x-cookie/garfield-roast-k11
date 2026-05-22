@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
   /* ── 5. Build prompt (superpowers skills + ECC instincts) ── */
   const systemPrompt = buildGarfieldPrompt(mode, securityFindings);
 
-  /* ── 6. Call DeepSeek via OpenRouter ── */
+  /* ── 6. Call Claude (via OpenRouter) ── */
   let rawResponse: string;
   try {
     const completion = await client.chat.completions.create({
