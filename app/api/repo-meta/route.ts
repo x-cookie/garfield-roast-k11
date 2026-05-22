@@ -13,12 +13,20 @@ export async function GET(req: NextRequest) {
     headers['Authorization'] = `token ${ghToken}`;
   }
 
-  const res = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+  let res = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+
+  // If token is invalid/revoked (401), retry without auth — public repos don't need it
+  if (res.status === 401 && headers['Authorization']) {
+    console.warn(`[repo-meta] Token rejected (401), retrying unauthenticated for "${repo}"`);
+    delete headers['Authorization'];
+    res = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+  }
+
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     console.error(`[repo-meta] GitHub ${res.status} for "${repo}": ${body.slice(0, 200)}`);
     if (res.status === 403) {
-      return NextResponse.json({ error: 'rate_limited', message: 'GitHub rate limit hit — set GITHUB_TOKEN in .env.local' }, { status: 503 });
+      return NextResponse.json({ error: 'rate_limited', message: 'GitHub rate limit hit — set a valid GITHUB_TOKEN' }, { status: 503 });
     }
     return NextResponse.json({ error: 'not_found' }, { status: 404 });
   }
