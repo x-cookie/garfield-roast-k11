@@ -287,6 +287,8 @@ export default function ResultPage() {
   const [visibleItems, setVisibleItems] = useState(0);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [highlightLines, setHighlightLines] = useState<Set<number>>(new Set());
+  const [activeTab, setActiveTab] = useState<'verdict' | 'findings' | 'share'>('verdict');
+  const [sevFilter, setSevFilter] = useState<'all' | 'critical' | 'warning' | 'note'>('all');
   const [gfFrame, setGfFrame] = useState(IDLE_FRAMES[0]);
   const gfTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gfFrameRef = useRef(0);
@@ -439,172 +441,247 @@ export default function ResultPage() {
           </div>
         </div>
 
-        {/* Roast panel */}
-        <div className="rpanel" id="roast-card">
-          <div className="rp-head">
+        {/* Roast panel — 3-tab layout */}
+        <div className="rpanel" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+
+          {/* Fixed header */}
+          <div className="rp-head" style={{ flexShrink: 0 }}>
             <pre className="rp-gf">{gfFrame}</pre>
-            <div>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div className="rp-title">GARFIELD&apos;S VERDICT</div>
               <div className="rp-sub">Powered by Claude</div>
             </div>
           </div>
 
-          {/* Score card — animated counter + bar + label */}
-          <div className="score-card">
-            <div className="score-lbl">
-              {result.repoType?.toUpperCase().replace('_', ' ') || 'CODE QUALITY'}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <div className="score-val" style={{ color: scoreColor }}>{displayScore}</div>
-              <span style={{ color: 'var(--text-3)', fontSize: 16 }}>/10</span>
-            </div>
-            <div className="score-category" style={{ border: `1px solid ${scoreColor}`, color: scoreColor }}>
-              {SCORE_LABELS[result.score] || 'JUDGED'}
-            </div>
-            <div style={{ display: 'flex', gap: 4, margin: '10px 0' }}>
-              {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} style={{
-                  flex: 1, height: 6, borderRadius: 2,
-                  background: i < displayScore ? scoreColor : 'var(--border)',
-                  transition: 'background 0.1s',
-                }} />
-              ))}
-            </div>
-            <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
-          </div>
-
-          {/* Findings stats — 3-column grid */}
-          {(() => {
-            const all = result.roastItems || [];
-            const crit = all.filter(r => r.severity === 'critical').length;
-            const warn = all.filter(r => r.severity === 'warning').length;
-            const note = all.filter(r => r.severity === 'note').length;
-            const stats = [
-              { label: 'CRITICAL', count: crit, color: 'var(--red)',    bg: 'rgba(192,83,78,0.08)',   icon: '💀' },
-              { label: 'WARNING',  count: warn, color: 'var(--orange)', bg: 'rgba(234,140,30,0.06)',  icon: '⚠' },
-              { label: 'NOTE',     count: note, color: 'var(--green)',  bg: 'rgba(90,158,111,0.06)', icon: '📝' },
-            ];
-            return (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '2px solid var(--border)' }}>
-                {stats.map(({ label, count, color, bg, icon }, idx) => (
-                  <div key={label} style={{
-                    padding: '14px 8px', textAlign: 'center', background: bg,
-                    borderRight: idx < 2 ? '1px solid var(--border)' : 'none',
-                  }}>
-                    <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-                      {visibleItems > 0 ? count : '—'}
-                    </div>
-                    <div style={{ fontSize: 8, color, letterSpacing: '0.12em', marginTop: 5, fontWeight: 700 }}>
-                      {icon} {label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
-
-          {/* Roast items — expandable 3-zona */}
-          <div className="ritems">
-            {(result.roastItems || []).slice(0, visibleItems).map((item, i) => {
-              const isExpanded = expanded.has(i);
-              const needsTruncate = item.text.length > PREVIEW_LEN;
-              const displayText = needsTruncate && !isExpanded
-                ? item.text.slice(0, PREVIEW_LEN) + '…'
-                : item.text;
+          {/* Tab bar */}
+          <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+            {(['verdict', 'findings', 'share'] as const).map(tab => {
+              const labels = { verdict: 'VERDICT', findings: 'FINDINGS', share: 'SHARE' };
+              const isActive = activeTab === tab;
               return (
-                <div
-                  key={i}
-                  className={`ritem sev-${item.severity[0]} ${item.isBank ? 'is-bank' : 'is-specific'}`}
-                  style={{ animationDelay: `${i * 0.05}s`, padding: 0, overflow: 'hidden' }}
-                >
-                  {/* Header zona */}
-                  <div
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 8,
-                      padding: '7px 10px',
-                      borderBottom: '1px solid var(--border)',
-                      background: item.isBank ? 'var(--orange-lo)' : 'rgba(201,122,94,0.07)',
-                      cursor: item.file ? 'pointer' : 'default',
-                    }}
-                    onClick={() => item.file && loadCodeFile(item.file)}
-                  >
-                    <span style={{
-                      width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                      background: item.severity === 'critical' ? 'var(--red)'
-                        : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)',
-                    }} />
-                    <span style={{
-                      fontSize: 9.5, fontWeight: 700, flex: 1,
-                      color: item.file ? 'var(--text)' : 'var(--text-3)',
-                      fontStyle: item.file ? 'normal' : 'italic',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
-                      {item.file || 'general observation'}
-                    </span>
-                    <span style={{
-                      fontSize: 8, padding: '1px 5px', borderRadius: 2,
-                      background: item.isBank ? 'rgba(234,140,30,0.15)' : 'rgba(201,122,94,0.15)',
-                      color: item.isBank ? 'var(--orange)' : 'var(--claude)',
-                    }}>
-                      {item.isBank ? 'BANK' : 'CLAUDE'}
-                    </span>
-                    <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0 }}>
-                      {item.badge || item.severity.toUpperCase()}
-                    </span>
-                  </div>
-                  {/* Body zona */}
-                  <div style={{ padding: '10px 10px 8px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.7 }}>
-                    <span style={{ fontStyle: 'italic', color: 'var(--text)' }}>{displayText}</span>
-                    {needsTruncate && (
-                      <button
-                        onClick={() => setExpanded(prev => {
-                          const next = new Set(prev);
-                          isExpanded ? next.delete(i) : next.add(i);
-                          return next;
-                        })}
-                        style={{
-                          display: 'block', marginTop: 6,
-                          background: 'none', border: 'none', cursor: 'pointer',
-                          fontSize: 9.5, color: 'var(--orange)', letterSpacing: '0.08em',
-                          fontFamily: 'var(--font)', padding: 0,
-                        }}
-                      >
-                        {isExpanded ? '↑ COLLAPSE' : '↓ READ MORE'}
-                      </button>
-                    )}
-                  </div>
-                </div>
+                <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                  flex: 1, padding: '10px 0', fontSize: 9.5, fontWeight: 700,
+                  letterSpacing: '0.1em', background: isActive ? 'var(--bg-card)' : 'none',
+                  border: 'none', borderBottom: isActive ? '2px solid var(--orange)' : '2px solid transparent',
+                  cursor: 'pointer', color: isActive ? 'var(--orange)' : 'var(--text-3)',
+                  fontFamily: 'var(--font)', transition: 'color 0.15s',
+                  marginBottom: '-1px',
+                }}>
+                  {labels[tab]}
+                </button>
               );
             })}
           </div>
 
-          {/* Share footer — 4-tab caption system */}
-          <div className="share-footer">
-            <div className="caption-lbl">PICK YOUR CAPTION</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 8 }}>
-              {(result.captionOptions || []).map((_, i) => {
-                const Icon = CAPTION_ICONS[i];
-                return (
-                  <button
-                    key={i}
-                    className={`cap ${selectedCaption === i ? 'on' : ''}`}
-                    style={{ padding: '6px 8px', fontSize: '9.5px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}
-                    onClick={() => setSelectedCaption(i)}
-                  >
-                    {Icon && <Icon size={12} />}
-                    {CAPTION_LABELS[i]}
-                  </button>
-                );
-              })}
-            </div>
-            <div style={{
-              background: 'var(--bg)', border: '1px solid var(--border)',
-              padding: '9px 10px', fontSize: '10.5px', color: 'var(--text)',
-              lineHeight: 1.55, minHeight: 60, marginBottom: 10, whiteSpace: 'pre-wrap',
-            }}>
-              {result.captionOptions?.[selectedCaption]?.text || ''}
-            </div>
-            <button className="btn btn-primary share-x-btn" onClick={doShare}>SHARE ON X →</button>
+          {/* Scrollable tab content */}
+          <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'thin' }}>
+
+            {/* ── TAB: VERDICT ── */}
+            {activeTab === 'verdict' && (
+              <div>
+                {/* Score card */}
+                <div className="score-card" id="roast-card">
+                  <div className="score-lbl">
+                    {result.repoType?.toUpperCase().replace(/_/g, ' ') || 'CODE QUALITY'}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                    <div className="score-val" style={{ color: scoreColor }}>{displayScore}</div>
+                    <span style={{ color: 'var(--text-3)', fontSize: 16 }}>/10</span>
+                  </div>
+                  <div className="score-category" style={{ border: `1px solid ${scoreColor}`, color: scoreColor }}>
+                    {SCORE_LABELS[result.score] || 'JUDGED'}
+                  </div>
+                  <div style={{ display: 'flex', gap: 4, margin: '10px 0' }}>
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <div key={i} style={{
+                        flex: 1, height: 6, borderRadius: 2,
+                        background: i < displayScore ? scoreColor : 'var(--border)',
+                        transition: 'background 0.1s',
+                      }} />
+                    ))}
+                  </div>
+                  <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
+                </div>
+
+                {/* Roast stream */}
+                <div className="ritems">
+                  {(result.roastItems || []).slice(0, visibleItems).map((item, i) => {
+                    const isExp = expanded.has(i);
+                    const needsTrunc = item.text.length > PREVIEW_LEN;
+                    const displayText = needsTrunc && !isExp ? item.text.slice(0, PREVIEW_LEN) + '…' : item.text;
+                    return (
+                      <div key={i} className={`ritem sev-${item.severity[0]} ${item.isBank ? 'is-bank' : 'is-specific'}`}
+                        style={{ animationDelay: `${i * 0.05}s`, padding: 0, overflow: 'hidden' }}>
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px',
+                          borderBottom: '1px solid var(--border)',
+                          background: item.isBank ? 'var(--orange-lo)' : 'rgba(201,122,94,0.07)',
+                          cursor: item.file ? 'pointer' : 'default',
+                        }} onClick={() => item.file && loadCodeFile(item.file)}>
+                          <span style={{ width: 6, height: 6, borderRadius: '50%', flexShrink: 0, background: item.severity === 'critical' ? 'var(--red)' : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)' }} />
+                          <span style={{ fontSize: 9.5, fontWeight: 700, flex: 1, color: item.file ? 'var(--text)' : 'var(--text-3)', fontStyle: item.file ? 'normal' : 'italic', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {item.file || 'general observation'}
+                          </span>
+                          <span style={{ fontSize: 8, padding: '1px 5px', borderRadius: 2, background: item.isBank ? 'rgba(234,140,30,0.15)' : 'rgba(201,122,94,0.15)', color: item.isBank ? 'var(--orange)' : 'var(--claude)' }}>
+                            {item.isBank ? 'BANK' : 'CLAUDE'}
+                          </span>
+                          <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0 }}>{item.badge || item.severity.toUpperCase()}</span>
+                        </div>
+                        <div style={{ padding: '10px 10px 8px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.7 }}>
+                          <span style={{ fontStyle: 'italic', color: 'var(--text)' }}>{displayText}</span>
+                          {needsTrunc && (
+                            <button onClick={() => setExpanded(prev => { const n = new Set(prev); isExp ? n.delete(i) : n.add(i); return n; })}
+                              style={{ display: 'block', marginTop: 6, background: 'none', border: 'none', cursor: 'pointer', fontSize: 9.5, color: 'var(--orange)', letterSpacing: '0.08em', fontFamily: 'var(--font)', padding: 0 }}>
+                              {isExp ? '↑ COLLAPSE' : '↓ READ MORE'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {visibleItems < (result.roastItems || []).length && (
+                    <div style={{ padding: '14px', textAlign: 'center', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.08em' }}>
+                      LOADING FINDINGS…
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── TAB: FINDINGS ── */}
+            {activeTab === 'findings' && (() => {
+              const all = result.roastItems || [];
+              const crit = all.filter(r => r.severity === 'critical').length;
+              const warn = all.filter(r => r.severity === 'warning').length;
+              const note = all.filter(r => r.severity === 'note').length;
+              const filters: { id: typeof sevFilter; label: string; count: number; color: string; bg: string }[] = [
+                { id: 'all',      label: 'ALL',      count: all.length, color: 'var(--text-2)',  bg: 'transparent' },
+                { id: 'critical', label: '💀 CRIT',  count: crit,       color: 'var(--red)',     bg: 'rgba(192,83,78,0.08)' },
+                { id: 'warning',  label: '⚠ WARN',  count: warn,       color: 'var(--orange)',  bg: 'rgba(234,140,30,0.06)' },
+                { id: 'note',     label: '📝 NOTE',  count: note,       color: 'var(--green)',   bg: 'rgba(90,158,111,0.06)' },
+              ];
+              const filtered = sevFilter === 'all' ? all : all.filter(r => r.severity === sevFilter);
+              return (
+                <div>
+                  {/* Filter bar */}
+                  <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', gap: 0 }}>
+                    {filters.map(f => (
+                      <button key={f.id} onClick={() => setSevFilter(f.id)} style={{
+                        flex: 1, padding: '10px 4px', fontSize: 9, fontWeight: 700,
+                        letterSpacing: '0.08em', border: 'none', cursor: 'pointer',
+                        fontFamily: 'var(--font)', transition: 'all 0.12s',
+                        color: sevFilter === f.id ? f.color : 'var(--text-3)',
+                        background: sevFilter === f.id ? f.bg : 'transparent',
+                        borderBottom: sevFilter === f.id ? `2px solid ${f.color}` : '2px solid transparent',
+                        marginBottom: '-1px',
+                      }}>
+                        {f.label}<br />
+                        <span style={{ fontSize: 14, fontWeight: 800, display: 'block', marginTop: 3 }}>{f.count}</span>
+                      </button>
+                    ))}
+                  </div>
+                  {/* Findings list */}
+                  <div style={{ padding: '0' }}>
+                    {filtered.length === 0 && (
+                      <div style={{ padding: '28px', textAlign: 'center', fontSize: 11, color: 'var(--text-3)' }}>
+                        No findings in this category.
+                      </div>
+                    )}
+                    {filtered.map((item, i) => (
+                      <div key={i} style={{
+                        borderBottom: '1px solid var(--border)',
+                        cursor: item.file ? 'pointer' : 'default',
+                      }} onClick={() => item.file && loadCodeFile(item.file)}>
+                        {/* Severity stripe + file */}
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: 8,
+                          padding: '10px 12px 6px',
+                        }}>
+                          <span style={{
+                            width: 3, height: 32, flexShrink: 0, borderRadius: 2,
+                            background: item.severity === 'critical' ? 'var(--red)' : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)',
+                          }} />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 9, color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: 2 }}>
+                              {item.isBank ? '● GARFIELD LORE' : '● REPO-SPECIFIC'}
+                            </div>
+                            <div style={{ fontSize: 10.5, fontWeight: 700, color: item.file ? 'var(--text)' : 'var(--text-3)', fontStyle: item.file ? 'normal' : 'italic', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {item.file || 'general observation'}
+                            </div>
+                          </div>
+                          <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0, flexShrink: 0 }}>
+                            {item.badge || item.severity.toUpperCase()}
+                          </span>
+                        </div>
+                        <div style={{ padding: '0 12px 12px 23px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
+                          {item.text}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ── TAB: SHARE ── */}
+            {activeTab === 'share' && (
+              <div style={{ padding: '16px 14px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {/* Mini score card preview */}
+                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', padding: '14px 16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: scoreColor, lineHeight: 1 }}>{result.score}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 8, color: 'var(--text-3)', letterSpacing: '0.12em', marginBottom: 3 }}>
+                        {result.repoType?.toUpperCase().replace(/_/g, ' ') || 'CODE QUALITY'}
+                      </div>
+                      <div style={{ fontSize: 9, color: scoreColor, letterSpacing: '0.1em', fontWeight: 700 }}>
+                        {SCORE_LABELS[result.score] || 'JUDGED'}
+                      </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10,4px)', gap: 2 }}>
+                      {Array.from({ length: 10 }, (_, i) => (
+                        <div key={i} style={{ height: 4, borderRadius: 1, background: i < result.score ? scoreColor : 'var(--border)' }} />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--text-2)', fontStyle: 'italic', lineHeight: 1.55 }}>
+                    &ldquo;{result.verdict}&rdquo;
+                  </div>
+                </div>
+
+                {/* Caption picker */}
+                <div>
+                  <div className="caption-lbl" style={{ marginBottom: 8 }}>PICK YOUR CAPTION</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 10 }}>
+                    {(result.captionOptions || []).map((_, i) => {
+                      const Icon = CAPTION_ICONS[i];
+                      return (
+                        <button key={i}
+                          className={`cap ${selectedCaption === i ? 'on' : ''}`}
+                          style={{ padding: '8px', fontSize: '9.5px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}
+                          onClick={() => setSelectedCaption(i)}>
+                          {Icon && <Icon size={12} />}
+                          {CAPTION_LABELS[i]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div style={{
+                    background: 'var(--bg)', border: '1px solid var(--border)',
+                    padding: '10px 12px', fontSize: '10.5px', color: 'var(--text)',
+                    lineHeight: 1.6, minHeight: 70, whiteSpace: 'pre-wrap', marginBottom: 12,
+                  }}>
+                    {result.captionOptions?.[selectedCaption]?.text || ''}
+                  </div>
+                </div>
+
+                {/* Share button — always fully visible */}
+                <button className="btn btn-primary share-x-btn" style={{ width: '100%', justifyContent: 'center', padding: '13px' }} onClick={doShare}>
+                  SHARE ON X →
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
 
