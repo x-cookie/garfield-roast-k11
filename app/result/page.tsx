@@ -178,7 +178,7 @@ const IDLE_FRAMES = [
 (= · = )
  \\___/`,
 ];
-import { IconFolder, IconFile } from '../icons';
+import { IconFolder, IconFile, IconFlame, IconShare, IconSmirk, IconCat } from '../icons';
 
 declare const html2canvas: (el: HTMLElement, opts: Record<string, unknown>) => Promise<HTMLCanvasElement>;
 
@@ -203,6 +203,9 @@ interface StoredState {
   files: { path: string }[];
   meta: Record<string, unknown> | null;
 }
+
+const CAPTION_ICONS = [IconFlame, IconShare, IconSmirk, IconCat];
+const CAPTION_LABELS = ['Standard', 'Challenge', 'Humble', 'Garfield Lore'];
 
 const SCORE_LABELS: Record<number, string> = {
   1: 'ARCHITECTURAL TRAGEDY', 2: 'PLEASE REFACTOR',
@@ -401,7 +404,7 @@ export default function ResultPage() {
           <div className="cview-body">
             {codeLines.length > 0 ? (
               codeLines.map((line, i) => (
-                <div key={i} className={`cl ${roastedFiles.has(selectedFile || '') && i < 6 ? 'hl' : ''}`}>
+                <div key={i} className="cl">
                   <span className="ln">{i + 1}</span>
                   <span className="lc" dangerouslySetInnerHTML={{ __html: highlight(line, selectedFile || '') }} />
                 </div>
@@ -436,9 +439,13 @@ export default function ResultPage() {
             <div className="score-category" style={{ border: `1px solid ${scoreColor}`, color: scoreColor }}>
               {SCORE_LABELS[result.score] || 'JUDGED'}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10,1fr)', gap: 3, margin: '8px 0' }}>
+            <div style={{ display: 'flex', gap: 4, margin: '10px 0' }}>
               {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} style={{ height: 4, background: i < displayScore ? scoreColor : 'var(--border)' }} />
+                <div key={i} style={{
+                  flex: 1, height: 6, borderRadius: 2,
+                  background: i < displayScore ? scoreColor : 'var(--border)',
+                  transition: 'background 0.1s',
+                }} />
               ))}
             </div>
             <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
@@ -496,16 +503,20 @@ export default function ResultPage() {
           <div className="share-footer">
             <div className="caption-lbl">PICK YOUR CAPTION</div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 8 }}>
-              {(result.captionOptions || []).map((cap, i) => (
-                <button
-                  key={i}
-                  className={`cap ${selectedCaption === i ? 'on' : ''}`}
-                  style={{ padding: '6px 8px', fontSize: '9.5px', textAlign: 'center' }}
-                  onClick={() => setSelectedCaption(i)}
-                >
-                  {cap.label}
-                </button>
-              ))}
+              {(result.captionOptions || []).map((_, i) => {
+                const Icon = CAPTION_ICONS[i];
+                return (
+                  <button
+                    key={i}
+                    className={`cap ${selectedCaption === i ? 'on' : ''}`}
+                    style={{ padding: '6px 8px', fontSize: '9.5px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}
+                    onClick={() => setSelectedCaption(i)}
+                  >
+                    {Icon && <Icon size={12} />}
+                    {CAPTION_LABELS[i]}
+                  </button>
+                );
+              })}
             </div>
             <div style={{
               background: 'var(--bg)', border: '1px solid var(--border)',

@@ -31,23 +31,7 @@ function getRedis(): Redis | null {
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-
-  /* ── 1. Rate limiting ── */
   const redis = getRedis();
-  if (redis) {
-    const today = new Date().toISOString().split('T')[0];
-    const rlKey = `rl:${ip}:${today}`;
-    const usage = await redis.incr(rlKey);
-    if (usage === 1) await redis.expire(rlKey, 86400);
-    if (usage > 3) {
-      return NextResponse.json(
-        { error: 'rate_limit', message: '3 roasts/day exceeded' },
-        { status: 429 }
-      );
-    }
-  }
-
   const { repoUrl, mode } = await req.json();
   if (!repoUrl || !/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repoUrl)) {
     return NextResponse.json({ error: 'invalid_repo' }, { status: 400 });
