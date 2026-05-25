@@ -187,7 +187,7 @@ export default function DocsPage() {
         </div>
 
         {/* Main content */}
-        <div ref={mainRef} style={{ maxWidth: '740px', padding: '0 52px 100px' }}>
+        <div ref={mainRef} style={{ maxWidth: '740px', padding: '0 52px 100px', margin: '0 auto' }}>
 
           <Section id="overview" title="What is Garfield Roast?" tag="overview">
             <P>Garfield Roast is a developer tool that uses Claude AI to analyze public GitHub repositories and deliver brutal, specific, developer-culture-aware code reviews — formatted as shareable roast cards.</P>
