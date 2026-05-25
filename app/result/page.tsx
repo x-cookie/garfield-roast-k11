@@ -206,6 +206,7 @@ interface StoredState {
 
 const CAPTION_ICONS = [IconFlame, IconShare, IconSmirk, IconCat];
 const CAPTION_LABELS = ['Standard', 'Challenge', 'Humble', 'Garfield Lore'];
+const PREVIEW_LEN = 220;
 
 const SCORE_LABELS: Record<number, string> = {
   1: 'ARCHITECTURAL TRAGEDY', 2: 'PLEASE REFACTOR',
@@ -268,6 +269,7 @@ export default function ResultPage() {
   const [selectedCaption, setSelectedCaption] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
   const [visibleItems, setVisibleItems] = useState(0);
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [gfFrame, setGfFrame] = useState(IDLE_FRAMES[0]);
   const gfTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gfFrameRef = useRef(0);
@@ -451,52 +453,95 @@ export default function ResultPage() {
             <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
           </div>
 
-          {/* Roast items — 3-zona structure */}
-          <div className="ritems">
-            {(result.roastItems || []).slice(0, visibleItems).map((item, i) => (
-              <div
-                key={i}
-                className={`ritem sev-${item.severity[0]} ${item.isBank ? 'is-bank' : 'is-specific'}`}
-                style={{ animationDelay: `${i * 0.05}s`, padding: 0, overflow: 'hidden' }}
-                onClick={() => item.file && loadCodeFile(item.file)}
-              >
-                {/* Header zona */}
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '7px 10px',
-                  borderBottom: '1px solid var(--border)',
-                  background: item.isBank ? 'var(--orange-lo)' : 'rgba(201,122,94,0.07)',
-                }}>
-                  <span style={{
-                    width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                    background: item.severity === 'critical' ? 'var(--red)'
-                      : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)',
-                  }} />
-                  <span style={{
-                    fontSize: 9.5, fontWeight: 700, flex: 1,
-                    color: item.file ? 'var(--text)' : 'var(--text-3)',
-                    fontStyle: item.file ? 'normal' : 'italic',
-                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                  }}>
-                    {item.file || 'general observation'}
-                  </span>
-                  <span style={{
-                    fontSize: 8, padding: '1px 5px', borderRadius: 2,
-                    background: item.isBank ? 'rgba(234,140,30,0.15)' : 'rgba(201,122,94,0.15)',
-                    color: item.isBank ? 'var(--orange)' : 'var(--claude)',
-                  }}>
-                    {item.isBank ? 'BANK' : 'CLAUDE'}
-                  </span>
-                  <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0 }}>
-                    {item.badge || item.severity.toUpperCase()}
-                  </span>
-                </div>
-                {/* Body zona */}
-                <div style={{ padding: '10px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
-                  <span style={{ fontStyle: 'italic', color: 'var(--text)' }}>{item.text}</span>
-                </div>
+          {/* Severity breakdown bar */}
+          {visibleItems > 0 && (() => {
+            const shown = (result.roastItems || []).slice(0, visibleItems);
+            const crit = shown.filter(r => r.severity === 'critical').length;
+            const warn = shown.filter(r => r.severity === 'warning').length;
+            const note = shown.filter(r => r.severity === 'note').length;
+            return (
+              <div style={{ display: 'flex', gap: 6, padding: '8px 12px', borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+                {crit > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(192,83,78,0.15)', color: 'var(--red)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>💀 {crit} CRITICAL</span>}
+                {warn > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(234,140,30,0.12)', color: 'var(--orange)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>⚠ {warn} WARNING</span>}
+                {note > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(90,158,111,0.12)', color: 'var(--green)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>📝 {note} NOTE</span>}
+                <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--text-3)' }}>{shown.length} findings</span>
               </div>
-            ))}
+            );
+          })()}
+
+          {/* Roast items — expandable 3-zona */}
+          <div className="ritems">
+            {(result.roastItems || []).slice(0, visibleItems).map((item, i) => {
+              const isExpanded = expanded.has(i);
+              const needsTruncate = item.text.length > PREVIEW_LEN;
+              const displayText = needsTruncate && !isExpanded
+                ? item.text.slice(0, PREVIEW_LEN) + '…'
+                : item.text;
+              return (
+                <div
+                  key={i}
+                  className={`ritem sev-${item.severity[0]} ${item.isBank ? 'is-bank' : 'is-specific'}`}
+                  style={{ animationDelay: `${i * 0.05}s`, padding: 0, overflow: 'hidden' }}
+                >
+                  {/* Header zona */}
+                  <div
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 8,
+                      padding: '7px 10px',
+                      borderBottom: '1px solid var(--border)',
+                      background: item.isBank ? 'var(--orange-lo)' : 'rgba(201,122,94,0.07)',
+                      cursor: item.file ? 'pointer' : 'default',
+                    }}
+                    onClick={() => item.file && loadCodeFile(item.file)}
+                  >
+                    <span style={{
+                      width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                      background: item.severity === 'critical' ? 'var(--red)'
+                        : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)',
+                    }} />
+                    <span style={{
+                      fontSize: 9.5, fontWeight: 700, flex: 1,
+                      color: item.file ? 'var(--text)' : 'var(--text-3)',
+                      fontStyle: item.file ? 'normal' : 'italic',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>
+                      {item.file || 'general observation'}
+                    </span>
+                    <span style={{
+                      fontSize: 8, padding: '1px 5px', borderRadius: 2,
+                      background: item.isBank ? 'rgba(234,140,30,0.15)' : 'rgba(201,122,94,0.15)',
+                      color: item.isBank ? 'var(--orange)' : 'var(--claude)',
+                    }}>
+                      {item.isBank ? 'BANK' : 'CLAUDE'}
+                    </span>
+                    <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0 }}>
+                      {item.badge || item.severity.toUpperCase()}
+                    </span>
+                  </div>
+                  {/* Body zona */}
+                  <div style={{ padding: '10px 10px 8px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.7 }}>
+                    <span style={{ fontStyle: 'italic', color: 'var(--text)' }}>{displayText}</span>
+                    {needsTruncate && (
+                      <button
+                        onClick={() => setExpanded(prev => {
+                          const next = new Set(prev);
+                          isExpanded ? next.delete(i) : next.add(i);
+                          return next;
+                        })}
+                        style={{
+                          display: 'block', marginTop: 6,
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          fontSize: 9.5, color: 'var(--orange)', letterSpacing: '0.08em',
+                          fontFamily: 'var(--font)', padding: 0,
+                        }}
+                      >
+                        {isExpanded ? '↑ COLLAPSE' : '↓ READ MORE'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Share footer — 4-tab caption system */}
