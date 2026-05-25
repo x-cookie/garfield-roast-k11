@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 14 frames each. Triggered after all roast items appear.
 const LAUGH_FRAMES = [
 ` /\\_/\\
 (  ^  ^ )
@@ -183,9 +182,35 @@ import { IconFolder, IconFile } from '../icons';
 
 declare const html2canvas: (el: HTMLElement, opts: Record<string, unknown>) => Promise<HTMLCanvasElement>;
 
-interface RoastItem { file: string; text: string; severity: string; }
-interface RoastResult { score: number; verdict: string; roastItems: RoastItem[]; captions: string[]; }
-interface StoredState { result: RoastResult; repo: string; mode: string; files: { path: string }[]; meta: Record<string, unknown> | null; }
+interface RoastItem {
+  file: string | null;
+  text: string;
+  severity: string;
+  badge: string;
+  isBank: boolean;
+}
+interface RoastResult {
+  score: number;
+  verdict: string;
+  repoType: string;
+  roastItems: RoastItem[];
+  captionOptions: { label: string; text: string }[];
+}
+interface StoredState {
+  result: RoastResult;
+  repo: string;
+  mode: string;
+  files: { path: string }[];
+  meta: Record<string, unknown> | null;
+}
+
+const SCORE_LABELS: Record<number, string> = {
+  1: 'ARCHITECTURAL TRAGEDY', 2: 'PLEASE REFACTOR',
+  3: 'GARFIELD IS SAD', 4: 'QUESTIONABLE CHOICES',
+  5: 'AVERAGE CHAOS', 6: 'SURVIVABLE',
+  7: 'NOT BAD, ACTUALLY', 8: 'GARFIELD IS IMPRESSED',
+  9: 'SUSPICIOUSLY CLEAN', 10: 'GARFIELD RESPECTS THIS',
+};
 
 function highlight(line: string, path: string): string {
   const esc = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -237,7 +262,8 @@ export default function ResultPage() {
   const [data, setData] = useState<StoredState | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [codeLines, setCodeLines] = useState<string[]>([]);
-  const [caption, setCaption] = useState('');
+  const [selectedCaption, setSelectedCaption] = useState(0);
+  const [displayScore, setDisplayScore] = useState(0);
   const [visibleItems, setVisibleItems] = useState(0);
   const [gfFrame, setGfFrame] = useState(IDLE_FRAMES[0]);
   const gfTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -248,11 +274,22 @@ export default function ResultPage() {
     if (!stored) { router.push('/roast'); return; }
     const d: StoredState = JSON.parse(stored);
     setData(d);
-    setCaption(d.result?.captions?.[0] || '');
+    setSelectedCaption(0);
+
+    // Animate score counter
+    let n = 0;
+    const target = d.result?.score ?? 0;
+    const counter = setInterval(() => {
+      n = Math.min(n + 1, target);
+      setDisplayScore(n);
+      if (n >= target) clearInterval(counter);
+    }, 100);
+
+    // Reveal roast items one by one
     const count = d.result?.roastItems?.length || 0;
     let i = 0;
     const id = setInterval(() => { i++; setVisibleItems(i); if (i >= count) clearInterval(id); }, 550);
-    return () => clearInterval(id);
+    return () => { clearInterval(counter); clearInterval(id); };
   }, [router]);
 
   useEffect(() => {
@@ -285,7 +322,8 @@ export default function ResultPage() {
   }
 
   async function doShare() {
-    const cap = caption || `My code got roasted by Garfield. garfieldroast.site`;
+    const cap = data?.result?.captionOptions?.[selectedCaption]?.text
+      || `My code got roasted by Garfield. garfieldroast.site`;
     try {
       if (typeof html2canvas !== 'undefined') {
         const card = document.getElementById('roast-card');
@@ -305,7 +343,9 @@ export default function ResultPage() {
   if (!data) return null;
 
   const { result, repo, mode, files } = data;
-  const roastedFiles = new Set((result?.roastItems || []).map(r => r.file));
+  const roastedFiles = new Set(
+    (result?.roastItems || []).map(r => r.file).filter((f): f is string => f !== null)
+  );
   const scoreColor = result.score <= 3 ? 'var(--red)' : result.score <= 6 ? 'var(--orange)' : 'var(--green)';
 
   const folders: Record<string, { path: string }[]> = {};
@@ -380,38 +420,99 @@ export default function ResultPage() {
             <pre className="rp-gf">{gfFrame}</pre>
             <div>
               <div className="rp-title">GARFIELD&apos;S VERDICT</div>
-              <div className="rp-sub">Powered by Claude</div>
+              <div className="rp-sub">Powered by DeepSeek</div>
             </div>
           </div>
 
+          {/* Score card — animated counter + bar + label */}
           <div className="score-card">
-            <div className="score-lbl">CODE QUALITY SCORE</div>
-            <div className="score-val" style={{ color: scoreColor }}>{result.score}/10</div>
-            <div className="score-verd">{result.verdict}</div>
+            <div className="score-lbl">
+              {result.repoType?.toUpperCase().replace('_', ' ') || 'CODE QUALITY'}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+              <div className="score-val" style={{ color: scoreColor }}>{displayScore}</div>
+              <span style={{ color: 'var(--text-3)', fontSize: 16 }}>/10</span>
+            </div>
+            <div className="score-category" style={{ border: `1px solid ${scoreColor}`, color: scoreColor }}>
+              {SCORE_LABELS[result.score] || 'JUDGED'}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10,1fr)', gap: 3, margin: '8px 0' }}>
+              {Array.from({ length: 10 }, (_, i) => (
+                <div key={i} style={{ height: 4, background: i < displayScore ? scoreColor : 'var(--border)' }} />
+              ))}
+            </div>
+            <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
           </div>
 
+          {/* Roast items — 3-zona structure */}
           <div className="ritems">
             {(result.roastItems || []).slice(0, visibleItems).map((item, i) => (
               <div
                 key={i}
-                className={`ritem ${mode === 'gentle' ? 'gentle' : ''}`}
-                style={{ animationDelay: `${i * 0.05}s` }}
+                className={`ritem sev-${item.severity[0]} ${item.isBank ? 'is-bank' : 'is-specific'}`}
+                style={{ animationDelay: `${i * 0.05}s`, padding: 0, overflow: 'hidden' }}
+                onClick={() => item.file && loadCodeFile(item.file)}
               >
-                <div className="ri-file"><IconFile size={11} /><span>{item.file}</span></div>
-                <div className="ri-text">{item.text}</div>
-                <span className={`ri-sev sev-${item.severity[0]}`}>{item.severity.toUpperCase()}</span>
+                {/* Header zona */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  padding: '7px 10px',
+                  borderBottom: '1px solid var(--border)',
+                  background: item.isBank ? 'var(--orange-lo)' : 'rgba(201,122,94,0.07)',
+                }}>
+                  <span style={{
+                    width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
+                    background: item.severity === 'critical' ? 'var(--red)'
+                      : item.severity === 'warning' ? 'var(--orange)' : 'var(--green)',
+                  }} />
+                  <span style={{
+                    fontSize: 9.5, fontWeight: 700, flex: 1,
+                    color: item.file ? 'var(--text)' : 'var(--text-3)',
+                    fontStyle: item.file ? 'normal' : 'italic',
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  }}>
+                    {item.file || 'general observation'}
+                  </span>
+                  <span style={{
+                    fontSize: 8, padding: '1px 5px', borderRadius: 2,
+                    background: item.isBank ? 'rgba(234,140,30,0.15)' : 'rgba(201,122,94,0.15)',
+                    color: item.isBank ? 'var(--orange)' : 'var(--claude)',
+                  }}>
+                    {item.isBank ? 'BANK' : 'CLAUDE'}
+                  </span>
+                  <span className={`ri-sev sev-${item.severity[0]}`} style={{ marginTop: 0 }}>
+                    {item.badge || item.severity.toUpperCase()}
+                  </span>
+                </div>
+                {/* Body zona */}
+                <div style={{ padding: '10px', fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.65 }}>
+                  <span style={{ fontStyle: 'italic', color: 'var(--text)' }}>{item.text}</span>
+                </div>
               </div>
             ))}
           </div>
 
+          {/* Share footer — 4-tab caption system */}
           <div className="share-footer">
             <div className="caption-lbl">PICK YOUR CAPTION</div>
-            <div className="captions">
-              {(result.captions || []).map((c, i) => (
-                <button key={i} className={`cap ${caption === c ? 'on' : ''}`} onClick={() => setCaption(c)}>
-                  {c}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginBottom: 8 }}>
+              {(result.captionOptions || []).map((cap, i) => (
+                <button
+                  key={i}
+                  className={`cap ${selectedCaption === i ? 'on' : ''}`}
+                  style={{ padding: '6px 8px', fontSize: '9.5px', textAlign: 'center' }}
+                  onClick={() => setSelectedCaption(i)}
+                >
+                  {cap.label}
                 </button>
               ))}
+            </div>
+            <div style={{
+              background: 'var(--bg)', border: '1px solid var(--border)',
+              padding: '9px 10px', fontSize: '10.5px', color: 'var(--text)',
+              lineHeight: 1.55, minHeight: 60, marginBottom: 10, whiteSpace: 'pre-wrap',
+            }}>
+              {result.captionOptions?.[selectedCaption]?.text || ''}
             </div>
             <button className="btn btn-primary share-x-btn" onClick={doShare}>SHARE ON X →</button>
           </div>

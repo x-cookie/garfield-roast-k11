@@ -572,6 +572,15 @@ body {
   94% { text-shadow: 1px 0 var(--orange); transform: none; }
 }
 
+/* ─── ITERATION 2: SCORE + RITEM UPGRADES ─── */
+.score-category {
+  font-size: 9px; letter-spacing: 0.12em;
+  padding: 3px 8px; display: inline-block;
+  margin: 6px 0;
+}
+.ritem.is-bank     { border-left-color: var(--orange); }
+.ritem.is-specific { border-left-color: var(--claude); }
+
 /* Responsive */
 @media (max-width: 900px) {
   .split { grid-template-columns: 0 1fr 320px; }

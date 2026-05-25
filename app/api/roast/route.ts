@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { Redis } from '@upstash/redis';
+import {
+  detectRepoType,
+  assembleRoast,
+  buildClaudePrompt,
+  type ClaudeFindings,
+  type RepoType,
+} from '@/lib/jokes-bank-v2';
 
 const client = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -46,8 +53,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid_repo' }, { status: 400 });
   }
 
-  /* ── 2. Check cache ── */
-  const cacheKey = `roast:${repoUrl}:${mode}`;
+  /* ── 2. Check cache — key computed after repoType detection below ── */
+  let cacheKey = `roast:${repoUrl}:${mode}`;
   if (redis) {
     const cached = await redis.get(cacheKey);
     if (cached) return NextResponse.json(cached);
@@ -55,8 +62,17 @@ export async function POST(req: NextRequest) {
 
   /* ── 3. Pack repo via GitHub API (no git binary required) ── */
   let packed: string;
+  let repoType: RepoType = 'generic';
   try {
-    packed = await packRepo(repoUrl);
+    const { content, files } = await packRepo(repoUrl);
+    repoType = detectRepoType(files.map(f => f.path));
+    cacheKey = `roast:${repoUrl}:${mode}:${repoType}`;
+    // re-check cache with type-aware key
+    if (redis) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return NextResponse.json(cached);
+    }
+    packed = content;
     if (packed.length > 80000) packed = packed.slice(0, 80000) + '\n<!-- TRUNCATED -->';
   } catch (e) {
     const msg = (e as Error).message ?? '';
@@ -70,15 +86,16 @@ export async function POST(req: NextRequest) {
   /* ── 4. Pre-scan security (ECC pattern) ── */
   const securityFindings = preScanSecurity(packed);
 
-  /* ── 5. Build prompt (superpowers skills + ECC instincts) ── */
-  const systemPrompt = buildGarfieldPrompt(mode, securityFindings);
+  /* ── 5. Build prompt ── */
+  let systemPrompt = buildClaudePrompt(mode, repoUrl, repoType);
+  if (securityFindings.length > 0) systemPrompt += `\n\nCRITICAL: ${securityFindings.join(', ')}. Make these the first findings and severity=critical.`;
 
   /* ── 6. Call Claude (via OpenRouter) ── */
   let rawResponse: string;
   try {
     const completion = await client.chat.completions.create({
       model: 'deepseek/deepseek-chat',
-      max_tokens: 2048,
+      max_tokens: 900,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Here is the repository to roast:\n\n${packed}` },
@@ -89,11 +106,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'ai_error' }, { status: 500 });
   }
 
-  /* ── 7. Parse JSON response ── */
+  /* ── 7. Parse JSON response + assemble with jokes bank ── */
   let result;
   try {
     const clean = rawResponse.replace(/```json\n?|```\n?/g, '').trim();
-    result = JSON.parse(clean);
+    const claudeFindings: ClaudeFindings = JSON.parse(clean);
+    result = assembleRoast(
+      `https://github.com/${repoUrl}`,
+      repoType,
+      claudeFindings,
+      mode as 'savage' | 'snarky' | 'gentle'
+    );
   } catch {
     return NextResponse.json({ error: 'parse_error', raw: rawResponse }, { status: 500 });
   }
@@ -108,7 +131,7 @@ export async function POST(req: NextRequest) {
  * Packs a remote GitHub repo into XML using the GitHub API — no git binary needed.
  * Works in Vercel Lambda where git clone is unavailable.
  */
-async function packRepo(repoUrl: string): Promise<string> {
+async function packRepo(repoUrl: string): Promise<{ content: string; files: { path: string }[] }> {
   const ghToken = (process.env.GITHUB_TOKEN ?? '').trim();
   const ghHeaders: Record<string, string> = {
     Accept: 'application/vnd.github.v3+json',
@@ -165,7 +188,10 @@ async function packRepo(repoUrl: string): Promise<string> {
   }
 
   if (sections.length === 0) throw new Error('no_content');
-  return `<repository name="${repoUrl}" branch="${branch}">\n${sections.join('\n\n')}\n</repository>`;
+  return {
+    content: `<repository name="${repoUrl}" branch="${branch}">\n${sections.join('\n\n')}\n</repository>`,
+    files,
+  };
 }
 
 function preScanSecurity(content: string): string[] {
@@ -177,54 +203,3 @@ function preScanSecurity(content: string): string[] {
   return findings;
 }
 
-function buildGarfieldPrompt(mode: string, secFindings: string[]): string {
-  const persona = {
-    savage: `You are GARFIELD — a monumentally sarcastic, terminally lazy senior software engineer
-who has seen every anti-pattern known to civilization. You hate bad code the way you hate Mondays:
-personally and passionately. You ROAST this codebase with specific, cutting, developer-culture-aware
-humor. Every line must sting AND make them laugh. Score 1-6 for this mode (be harsh).`,
-    snarky: `You are GARFIELD — sardonic, witty, mildly amused by the chaos before you.
-You roast with raised eyebrow energy. Clever over brutal. Score 3-7 for this mode.`,
-    gentle: `You are GARFIELD — still honest, still Garfield, but you had your lasagna today
-so you're in a decent mood. Constructive roasts. Actionable feedback. Still specific. Score 4-8.`,
-  };
-
-  const skills = `
-ANALYSIS SKILLS (use all of these as lenses):
-- ARCHITECTURE: god objects, circular deps, missing SRP, monolithic functions (>50 lines = flag)
-- NAMING: generic names (data/info/stuff/temp), single-letter vars outside loops, misleading names
-- SECURITY: hardcoded creds, eval(), missing input validation, wildcard CORS, unsafe deserialization
-- TECH DEBT: TODO/FIXME count, commented-out code, console.log production, magic numbers
-- DEPENDENCIES: dep count vs actual functionality (flag bloat), outdated packages, unused imports
-- README: missing sections, "coming soon" items, no installation guide, no example usage`;
-
-  const securityNote = secFindings.length > 0
-    ? `\n\nCRITICAL SECURITY FINDINGS PRE-DETECTED: ${secFindings.join(', ')} — MAKE THESE HURT EXTRA.`
-    : '';
-
-  const instincts = `
-INSTINCTS (always active):
-- Be SPECIFIC: reference real file names, function names, variable names from the repo
-- Use developer culture: npm hell, Stack Overflow, deploy anxiety, "works on my machine"
-- Each roastItem must link to a specific file
-- End verdict with something screenshot-worthy
-- NEVER be generic. Garfield has READ this specific repo.${securityNote}`;
-
-  const schema = `
-Respond ONLY with valid JSON — no markdown, no preamble:
-{
-  "score": <1-10 integer>,
-  "verdict": "<one devastating sentence from Garfield>",
-  "roastItems": [
-    { "file": "<exact filename>", "text": "<specific roast>", "severity": "critical|warning|note" }
-  ],
-  "captions": [
-    "<tweet caption 1 — include score, funny>",
-    "<tweet caption 2 — quote verdict>",
-    "<tweet caption 3 — self-deprecating dev humor>"
-  ]
-}
-Minimum 4 roastItems. Maximum 8.`;
-
-  return `${persona[mode as keyof typeof persona]}\n${skills}\n${instincts}\n\n${schema}`;
-}
