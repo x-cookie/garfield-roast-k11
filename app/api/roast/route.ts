@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
   try {
     const clean = rawResponse.replace(/```json\n?|```\n?/g, '').trim();
     const parsed = JSON.parse(clean);
-    // Normalise: DeepSeek sometimes returns roastItems instead of findings
+    // Normalise: model sometimes returns roastItems instead of findings
     const claudeFindings: ClaudeFindings = {
       score: parsed.score,
       verdict: parsed.verdict,

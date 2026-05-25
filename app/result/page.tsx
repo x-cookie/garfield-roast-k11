@@ -208,6 +208,22 @@ const CAPTION_ICONS = [IconFlame, IconShare, IconSmirk, IconCat];
 const CAPTION_LABELS = ['Standard', 'Challenge', 'Humble', 'Garfield Lore'];
 const PREVIEW_LEN = 220;
 
+// Deterministic unique highlight lines per file — hash of filename → line indices
+function getHighlightLines(path: string, totalLines: number): Set<number> {
+  if (totalLines < 6) return new Set();
+  let h = 0;
+  for (let i = 0; i < path.length; i++) h = (Math.imul(31, h) + path.charCodeAt(i)) | 0;
+  h = Math.abs(h);
+  const cap = Math.min(totalLines - 1, 100);
+  const count = 3 + (h % 4);
+  const lines = new Set<number>();
+  for (let i = 0; lines.size < count && i < count * 5; i++) {
+    const ln = Math.abs((Math.imul(h ^ (i * 2654435761 | 0), 1664525) | 0)) % cap;
+    if (ln > 0) lines.add(ln);
+  }
+  return lines;
+}
+
 const SCORE_LABELS: Record<number, string> = {
   1: 'ARCHITECTURAL TRAGEDY', 2: 'PLEASE REFACTOR',
   3: 'GARFIELD IS SAD', 4: 'QUESTIONABLE CHOICES',
@@ -270,6 +286,7 @@ export default function ResultPage() {
   const [displayScore, setDisplayScore] = useState(0);
   const [visibleItems, setVisibleItems] = useState(0);
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [highlightLines, setHighlightLines] = useState<Set<number>>(new Set());
   const [gfFrame, setGfFrame] = useState(IDLE_FRAMES[0]);
   const gfTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const gfFrameRef = useRef(0);
@@ -316,11 +333,14 @@ export default function ResultPage() {
   async function loadCodeFile(path: string) {
     if (!data) return;
     setSelectedFile(path);
+    setHighlightLines(new Set());
     try {
       const branch = (data.meta?.defaultBranch as string) || 'main';
       const r = await fetch(`https://raw.githubusercontent.com/${data.repo}/${branch}/${path}`);
       const text = r.ok ? (await r.text()).slice(0, 12000) : '// could not load';
-      setCodeLines(text.split('\n'));
+      const lines = text.split('\n');
+      setCodeLines(lines);
+      setHighlightLines(getHighlightLines(path, lines.length));
     } catch {
       setCodeLines(['// could not load']);
     }
@@ -406,7 +426,7 @@ export default function ResultPage() {
           <div className="cview-body">
             {codeLines.length > 0 ? (
               codeLines.map((line, i) => (
-                <div key={i} className="cl">
+                <div key={i} className={`cl${highlightLines.has(i) ? ' hl' : ''}`}>
                   <span className="ln">{i + 1}</span>
                   <span className="lc" dangerouslySetInnerHTML={{ __html: highlight(line, selectedFile || '') }} />
                 </div>
@@ -425,7 +445,7 @@ export default function ResultPage() {
             <pre className="rp-gf">{gfFrame}</pre>
             <div>
               <div className="rp-title">GARFIELD&apos;S VERDICT</div>
-              <div className="rp-sub">Powered by DeepSeek</div>
+              <div className="rp-sub">Powered by Claude</div>
             </div>
           </div>
 
@@ -453,18 +473,32 @@ export default function ResultPage() {
             <div className="score-verd">&ldquo;{result.verdict}&rdquo;</div>
           </div>
 
-          {/* Severity breakdown bar */}
-          {visibleItems > 0 && (() => {
-            const shown = (result.roastItems || []).slice(0, visibleItems);
-            const crit = shown.filter(r => r.severity === 'critical').length;
-            const warn = shown.filter(r => r.severity === 'warning').length;
-            const note = shown.filter(r => r.severity === 'note').length;
+          {/* Findings stats — 3-column grid */}
+          {(() => {
+            const all = result.roastItems || [];
+            const crit = all.filter(r => r.severity === 'critical').length;
+            const warn = all.filter(r => r.severity === 'warning').length;
+            const note = all.filter(r => r.severity === 'note').length;
+            const stats = [
+              { label: 'CRITICAL', count: crit, color: 'var(--red)',    bg: 'rgba(192,83,78,0.08)',   icon: '💀' },
+              { label: 'WARNING',  count: warn, color: 'var(--orange)', bg: 'rgba(234,140,30,0.06)',  icon: '⚠' },
+              { label: 'NOTE',     count: note, color: 'var(--green)',  bg: 'rgba(90,158,111,0.06)', icon: '📝' },
+            ];
             return (
-              <div style={{ display: 'flex', gap: 6, padding: '8px 12px', borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
-                {crit > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(192,83,78,0.15)', color: 'var(--red)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>💀 {crit} CRITICAL</span>}
-                {warn > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(234,140,30,0.12)', color: 'var(--orange)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>⚠ {warn} WARNING</span>}
-                {note > 0 && <span style={{ fontSize: 9, padding: '2px 7px', background: 'rgba(90,158,111,0.12)', color: 'var(--green)', borderRadius: 2, fontWeight: 700, letterSpacing: '0.08em' }}>📝 {note} NOTE</span>}
-                <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--text-3)' }}>{shown.length} findings</span>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '2px solid var(--border)' }}>
+                {stats.map(({ label, count, color, bg, icon }, idx) => (
+                  <div key={label} style={{
+                    padding: '14px 8px', textAlign: 'center', background: bg,
+                    borderRight: idx < 2 ? '1px solid var(--border)' : 'none',
+                  }}>
+                    <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                      {visibleItems > 0 ? count : '—'}
+                    </div>
+                    <div style={{ fontSize: 8, color, letterSpacing: '0.12em', marginTop: 5, fontWeight: 700 }}>
+                      {icon} {label}
+                    </div>
+                  </div>
+                ))}
               </div>
             );
           })()}
