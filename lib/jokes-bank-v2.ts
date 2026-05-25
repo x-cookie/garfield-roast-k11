@@ -356,11 +356,18 @@ export function assembleRoast(
     isBank: true,
   }))
 
+  const badgeMap = {
+    savage:  { critical: '💀 DESTROYED', warning: '🔥 BURNED', note: '😒 NOTED' },
+    snarky:  { critical: '🎯 SPOTTED',   warning: '⚡ CAUGHT',  note: '👁 SEEN'  },
+    gentle:  { critical: '📌 FLAGGED',   warning: '📌 FLAGGED', note: '📝 NOTE'  },
+  }
+  const badges = badgeMap[mode] ?? badgeMap.savage
+
   const claudeItems = claude.findings.map(f => ({
     file: f.file,
     text: f.text,
     severity: f.severity,
-    badge: f.severity === 'critical' ? '🎯 SPOTTED' : '👁 NOTICED',
+    badge: badges[f.severity as 'critical' | 'warning' | 'note'] ?? badges.note,
     isBank: false,
   }))
 
@@ -408,34 +415,47 @@ export function buildClaudePrompt(
     generic:   'Look for naming conventions, architecture, error handling, test coverage.'
   }[repoType]
 
-  return `You are Garfield. Lazy, devastating, and surgically precise. Tone: ${tone}.
+  const toneInstructions = {
+    savage: `You are writing a public humiliation, not a code review. Every finding should make a developer wince. Mock the decision. Express disbelief. Compare their choices to worse alternatives and imply they still managed to be worse. Be contemptuous. Be specific. Be merciless.`,
+    snarky: `You are writing a sardonic dissection, not a bug report. Express dry disappointment. Point out the absurdity of each choice. Be precise and cutting — the cruelest observations are the accurate ones.`,
+    gentle: `You are an honest senior engineer who has seen too much. Be direct and specific. No sugarcoating but no cruelty. State the problem, name the evidence, explain the consequence.`,
+  }[mode] ?? `You are writing a public humiliation, not a code review.`
 
-CONTEXT: ${typeHint}
+  return `You are Garfield. Tone: ${tone}.
 
-RULE: Every finding must be SPECIFIC to THIS repo. No metaphors. No comparisons to Garfield or lasagna.
-Name the actual file. Name the actual function or variable you see. Give numbers if you see them.
-Bad: "This file is a mess." Good: "processData() in utils.js takes 4 parameters named data, data2, temp, and finalResult — none of which describe what they do."
-Bad: "No tests." Good: "package.json lists jest as a dependency. There is no __tests__ directory, no .test.ts files, and no test script. Jest was installed and then ignored."
+${toneInstructions}
 
-FINDINGS FORMAT — each text field must:
-- Name the exact filename
-- Quote or describe a real function name, variable name, or pattern you actually saw
-- State WHY it is a problem in one additional sentence
-- Be 2-3 sentences max — short, sharp, final
+REPO CONTEXT: ${typeHint}
+
+MANDATORY RULE: Every finding names the exact file AND a specific function, variable, pattern, or number you actually observed. Generic statements are banned.
+
+EXAMPLES OF BANNED LANGUAGE (too polite, too hint-like):
+- "relies on X without any fallback" → sounds like a helpful suggestion
+- "this should be centralized to avoid duplication" → sounds like a code review comment
+- "leaving the API route brittle and error-prone" → advisory tone, not a roast
+
+EXAMPLES OF CORRECT SAVAGE LANGUAGE:
+- "processData() in utils.js has four parameters: data, data2, temp, and finalResult. The developer named these while asleep. This is not a function signature. This is a personality crisis that compiles."
+- "package.json lists jest as a devDependency. There is no __tests__ folder, no .test.ts file, no test script in scripts. Jest was installed, forgotten, and left in the bill like a tab you never paid. The test suite is a ghost town."
+- "The catch block is catch(e) {}. The developer saw an error, made eye contact with it, and walked away. Somewhere in production right now, something is silently failing and nobody will ever know why because this file decided that errors are other people's problems."
+- "MODEL is hardcoded as 'openai/gpt-4o-mini' in plain text on line 7. Not an env var. Not a config. Just a string that will break in production and produce a 500 with no explanation when the model name changes. A junior intern on their first day would have made this an environment variable."
+- "SPAWN_COLORS in InteractiveBg.tsx hardcodes rgba(0,255,65,0.8) and friends instead of referencing the CSS variables that exist three files away in globals.css. The design system is literally right there. Ignored."
+
+SCORING:
+- Savage: score 1-5, findings read like a public trial
+- Snarky: score 2-6, findings read like cold contempt
+- Gentle: score 4-8, findings are blunt but not cruel
 
 Respond ONLY in valid JSON (no markdown fence):
 {
   "score": <integer 1-10>,
-  "verdict": "<one sentence — must name a specific file or function from THIS repo, no generic statements>",
+  "verdict": "<one sentence — name a specific file or function, express a judgment, no generic statements>",
   "findings": [
-    { "file": "<real filename>", "text": "<specific, named, numbered — see format above>", "severity": "critical|warning|note" }
+    { "file": "<exact filename>", "text": "<named evidence + contemptuous judgment — 2-4 sentences>", "severity": "critical|warning|note" }
   ]
 }
 
-Requirements:
 - findings: min 3, max 5
-- Savage: score 1-5, be merciless about what you see
-- Snarky: score 2-6, be precise and cutting
-- Gentle: score 4-8, findings are specific but constructive
-- If secrets detected: severity=critical, first finding`
+- If secrets detected: severity=critical, first finding
+- Never use "leaving X brittle", "should be centralized", "consider using", "would be better if" — these are code review phrases, not roast phrases`
 }
