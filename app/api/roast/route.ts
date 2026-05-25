@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       if (cached) return NextResponse.json(cached);
     }
     packed = content;
-    if (packed.length > 80000) packed = packed.slice(0, 80000) + '\n<!-- TRUNCATED -->';
+    if (packed.length > 32000) packed = packed.slice(0, 32000) + '\n<!-- TRUNCATED -->';
   } catch (e) {
     const msg = (e as Error).message ?? '';
     console.error('[roast] packRepo failed:', msg);
@@ -79,14 +79,15 @@ export async function POST(req: NextRequest) {
   try {
     const completion = await client.chat.completions.create({
       model: 'deepseek/deepseek-chat',
-      max_tokens: 900,
+      max_tokens: 1400,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Here is the repository to roast:\n\n${packed}` },
       ],
     });
     rawResponse = completion.choices[0].message.content ?? '';
-  } catch {
+  } catch (e) {
+    console.error('[roast] ai_error:', e);
     return NextResponse.json({ error: 'ai_error' }, { status: 500 });
   }
 
@@ -94,14 +95,21 @@ export async function POST(req: NextRequest) {
   let result;
   try {
     const clean = rawResponse.replace(/```json\n?|```\n?/g, '').trim();
-    const claudeFindings: ClaudeFindings = JSON.parse(clean);
+    const parsed = JSON.parse(clean);
+    // Normalise: DeepSeek sometimes returns roastItems instead of findings
+    const claudeFindings: ClaudeFindings = {
+      score: parsed.score,
+      verdict: parsed.verdict,
+      findings: parsed.findings ?? parsed.roastItems ?? [],
+    };
     result = assembleRoast(
       `https://github.com/${repoUrl}`,
       repoType,
       claudeFindings,
       mode as 'savage' | 'snarky' | 'gentle'
     );
-  } catch {
+  } catch (e) {
+    console.error('[roast] parse_error — raw:', rawResponse, 'err:', e);
     return NextResponse.json({ error: 'parse_error', raw: rawResponse }, { status: 500 });
   }
 
@@ -148,7 +156,7 @@ async function packRepo(repoUrl: string): Promise<{ content: string; files: { pa
   ];
   const files = (treeData.tree || [])
     .filter(f => f.type === 'blob' && !SKIP.some(p => p.test(f.path)) && (f.size ?? 0) < 100_000)
-    .slice(0, 60);
+    .slice(0, 30);
 
   if (files.length === 0) throw new Error('empty_repo');
 
@@ -164,7 +172,7 @@ async function packRepo(repoUrl: string): Promise<{ content: string; files: { pa
           const r = await fetch(`${rawBase}/${f.path}`);
           if (!r.ok) return '';
           const text = await r.text();
-          return `<file path="${f.path}">\n${text.slice(0, 10_000)}\n</file>`;
+          return `<file path="${f.path}">\n${text.slice(0, 2_500)}\n</file>`;
         } catch { return ''; }
       })
     );
