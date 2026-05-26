@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
   let rawResponse: string;
   try {
     const completion = await client.chat.completions.create({
-      model: 'deepseek/deepseek-chat-v3-0324:free',
+      model: 'deepseek/deepseek-chat:free',
       max_tokens: 1400,
       messages: [
         { role: 'system', content: systemPrompt },
