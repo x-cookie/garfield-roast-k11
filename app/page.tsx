@@ -316,43 +316,47 @@ export default function LandingPage() {
       <section className="hero" ref={heroSectionRef}>
         <HeroParticles />
         <div className="hero-glow" />
-        <pre className="hero-ascii" ref={heroRef}>{HERO_TIMELINE[0].t}</pre>
 
-        <div className="hero-eyebrow">
-          <span className="tag">[ GARFIELD ROAST · POWERED BY CLAUDE ]</span>
+        {/* Left: CTA */}
+        <div className="hero-left">
+          <div className="hero-eyebrow">
+            <span className="tag">[ GARFIELD ROAST · POWERED BY CLAUDE ]</span>
+          </div>
+          <h1 className="hero-title">
+            YOUR CODE<br />
+            <em className="glitch">WILL BE JUDGED.</em>
+          </h1>
+          <p className="hero-sub">
+            Garfield doesn&apos;t care about your feelings.<br />
+            But he&apos;ll tell you exactly what&apos;s wrong with your codebase —
+            with the brutal honesty only a cat with no deadlines can deliver.
+          </p>
+          <div className="hero-actions">
+            <button className="btn btn-primary btn-hero" onClick={() => router.push('/roast')}>
+              <IconFlame size={16} />
+              ROAST MY REPO
+            </button>
+            <button className="btn btn-outline btn-hero">
+              SEE AN EXAMPLE →
+            </button>
+          </div>
+          <div className="powered-pill">
+            <span className="powered-dot"></span>
+            POWERED BY CLAUDE
+          </div>
+          <div className="hero-stats">
+            <div><span className="stat-val">3,241</span><span className="stat-key">REPOS JUDGED</span></div>
+            <div><span className="stat-val">0</span><span className="stat-key">FEELINGS SPARED</span></div>
+            <div><span className="stat-val">71%</span><span className="stat-key">HAD CRITICAL BUGS</span></div>
+            <div><span className="stat-val">4.2</span><span className="stat-key">AVG SCORE / 10</span></div>
+          </div>
         </div>
 
-        <h1 className="hero-title">
-          YOUR CODE<br />
-          <em className="glitch">WILL BE JUDGED.</em>
-        </h1>
-
-        <p className="hero-sub">
-          Garfield doesn&apos;t care about your feelings.<br />
-          But he&apos;ll tell you exactly what&apos;s wrong with your codebase —
-          with the brutal honesty only a cat with no deadlines can deliver.
-        </p>
-
-        <div className="hero-actions">
-          <button className="btn btn-primary btn-hero" onClick={() => router.push('/roast')}>
-            <IconFlame size={16} />
-            ROAST MY REPO
-          </button>
-          <button className="btn btn-outline btn-hero">
-            SEE AN EXAMPLE →
-          </button>
-        </div>
-
-        <div className="powered-pill">
-          <span className="powered-dot"></span>
-          POWERED BY CLAUDE
-        </div>
-
-        <div className="hero-stats">
-          <div><span className="stat-val">3,241</span><span className="stat-key">REPOS JUDGED</span></div>
-          <div><span className="stat-val">0</span><span className="stat-key">FEELINGS SPARED</span></div>
-          <div><span className="stat-val">71%</span><span className="stat-key">HAD CRITICAL BUGS</span></div>
-          <div><span className="stat-val">4.2</span><span className="stat-key">AVG SCORE / 10</span></div>
+        {/* Right: Mascot */}
+        <div className="hero-right">
+          <div className="mascot-frame">
+            <img src="/logo.jpeg" alt="Garfield" className="logo-glow" />
+          </div>
         </div>
       </section>
 
