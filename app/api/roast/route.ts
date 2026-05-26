@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
   let rawResponse: string;
   try {
     const completion = await client.chat.completions.create({
-      model: 'deepseek/deepseek-chat:free',
+      model: 'nvidia/nemotron-nano-9b-v2',
       max_tokens: 1400,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
   /* ── 7. Parse JSON response + assemble with jokes bank ── */
   let result;
   try {
-    const clean = rawResponse.replace(/```json\n?|```\n?/g, '').trim();
+    const clean = rawResponse.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/```json\n?|```\n?/g, '').trim();
     const parsed = JSON.parse(clean);
     // Normalise: model sometimes returns roastItems instead of findings
     const claudeFindings: ClaudeFindings = {
