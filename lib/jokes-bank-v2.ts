@@ -304,6 +304,393 @@ export const JOKES_BANK: GarfieldJoke[] = [
     text: `One commit, 312 days ago: "initial commit." Nothing else. The README says "coming soon." Every person who finds this and thinks it might be useful reads that and leaves. That's every user this project has ever had. Coming soon for 312 days means it's not coming.`,
     badge: 'INITIAL COMMIT FOREVER',
   },
+
+  // ══ GARFIELD +9 (gf-12 → gf-20)
+
+  {
+    id: 'gf-12', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `This function is 300 lines long with zero comments. Every developer who opens it has to read all 300 lines before they can understand what it does or safely change anything. You wrote 300 lines and left no explanation. That's not code, that's a hostage situation for whoever comes next.`,
+    badge: 'HOSTAGE FUNCTION',
+  },
+  {
+    id: 'gf-13', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `This codebase has 23 files named some variation of utils, helpers, misc, or common. None of them have a clear scope. Everything without an obvious home got thrown into one of these. Every developer who joins spends their first week just figuring out where things live.`,
+    badge: 'MISC GRAVEYARD',
+  },
+  {
+    id: 'gf-14', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'note',
+    text: `Last commit was 8 months ago. 14 open issues, 3 labeled urgent. PRs sitting unreviewed for 6 months. This repo is not maintained — it's just not deleted yet. Anyone relying on this in production is on their own and doesn't know it.`,
+    badge: 'ABANDONED BUT ALIVE',
+  },
+  {
+    id: 'gf-15', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `There are 6 different ways to do the same thing in this codebase and all 6 are in active use simultaneously. Every new developer picks one at random. The codebase is drifting in 6 directions with no indication of which one is right. Nobody will ever pick a direction because that would require admitting the other 5 exist.`,
+    badge: 'SIX WAYS TO FAIL',
+  },
+  {
+    id: 'gf-16', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'note',
+    text: `Every function here has a comment that just restates the function name. // gets the user — getUser(). // saves the data — saveData(). The comments add nothing. Someone spent time writing them. Every developer who reads them spends time reading them. All of that time produced zero information.`,
+    badge: 'COMMENT THEATER',
+  },
+  {
+    id: 'gf-17', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `Every error in this app surfaces as "something went wrong." Not which thing. Not where. Not why. Every time a user hits an error they get the same message regardless of what broke. Nobody who uses this app can ever tell you what actually went wrong because you made sure they couldn't.`,
+    badge: 'SOMETHING WENT WRONG',
+  },
+  {
+    id: 'gf-18', tier: 'garfield', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'critical',
+    text: `Global variables being mutated from 6 different places. State that should be scoped is living at the top level. When a bug appears nobody knows which of the 6 mutation points caused it. You built a system where the source of truth is "wherever it was last touched."`,
+    badge: 'GLOBAL MUTATION PARTY',
+  },
+  {
+    id: 'gf-19', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `The project structure has folders called src, source, app, lib, utils, helpers, common, shared, and misc. Nine folders for code that should have a clear home. Nobody joining this project can predict where anything lives. Every search is a full-repo grep because the structure tells you nothing.`,
+    badge: 'NINE FOLDERS OF CHAOS',
+  },
+  {
+    id: 'gf-20', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `The entire auth logic is in a single 500-line middleware file imported everywhere and understood by nobody. Four comments say "don't touch this." No explanation of why. Everyone working here has silently agreed not to ask questions about this file. That agreement is your documentation.`,
+    badge: 'DO NOT TOUCH',
+  },
+
+  // ══ DEV CULTURE +10 (dev-11 → dev-20)
+
+  {
+    id: 'dev-11', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `The PR that introduced this was titled "quick fix." The diff was 847 lines. "Quick fix" is what you label something when you know it should have been reviewed properly but you needed it merged fast. It got merged. That's what's running in production now.`,
+    badge: 'QUICK FIX (847 LINES)',
+  },
+  {
+    id: 'dev-12', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `34 commented-out blocks of code, dated from 2019 to 2024. Not removed. Commented out. Every developer who reads through this has to figure out if the commented code is a backup, a reference, or waiting to be uncommented. You couldn't decide, so everyone after you inherits the indecision.`,
+    badge: 'COMMENTED CEMETERY',
+  },
+  {
+    id: 'dev-13', tier: 'dev_culture', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'critical',
+    text: `The code review on the PR that introduced this bug had one comment: "LGTM." The PR was 400 lines. Nothing in a 400-line PR gets reviewed with one comment. LGTM is not a review. LGTM is what you write when you want something merged and you haven't read it.`,
+    badge: 'LGTM (400 LINES)',
+  },
+  {
+    id: 'dev-14', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'note',
+    text: `8 issues labeled "good first issue" have been open for over a year. New contributors opened 4 of them, asked clarifying questions, got no response, and left. You posted "good first issue" and then abandoned everyone who tried. The label is still there inviting more people to be ignored.`,
+    badge: 'GOOD FIRST GHOST',
+  },
+  {
+    id: 'dev-15', tier: 'dev_culture', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'warning',
+    text: `The deployment process is documented as: run the script, check if it worked, if not — ask Dave. Dave left the company in March. Step 3 is currently "ask around and hope someone knows." That's the entire disaster recovery plan for this service.`,
+    badge: 'ASK DAVE',
+  },
+  {
+    id: 'dev-16', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `12 consecutive commits with the message "fix." Not "fix X," not "fix issue #123." Just "fix." When something breaks and someone goes to git blame, they'll find 12 commits that say nothing. Every one of those commits is a moment you chose not to explain what you did.`,
+    badge: 'FIX FIX FIX FIX',
+  },
+  {
+    id: 'dev-17', tier: 'dev_culture', repoTypes: ['backend', 'generic'],
+    severity: 'warning',
+    text: `Staging was last synced with production 4 months ago. Every test run on staging is testing against config and data that no longer matches what's live. Staging isn't a test environment. It's a historical artifact everyone pretends is still relevant.`,
+    badge: 'STAGING FICTION',
+  },
+  {
+    id: 'dev-18', tier: 'dev_culture', repoTypes: ['frontend', 'backend', 'generic'],
+    severity: 'note',
+    text: `6 different date formatting functions across this codebase, written separately, with slightly different behavior. Nobody knows which one is canonical. New code picks one at random. The date formatting is inconsistent across the UI and has been since the second developer joined.`,
+    badge: 'SIX DATE FORMATS',
+  },
+  {
+    id: 'dev-19', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `The on-call runbook says "see internal wiki for details" for every incident type. The internal wiki link is a 404. It has been a 404 for 6 months. When something breaks at 2am, the runbook sends the on-call engineer to a dead link. That's the emergency response plan you shipped.`,
+    badge: 'RUNBOOK 404',
+  },
+  {
+    id: 'dev-20', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `The tests folder has one file: placeholder.test.js. One test: it('should work', () => { expect(true).toBe(true) }). It always passes. It is completely meaningless. Someone created a test folder, wrote a test that can never fail, checked the CI box, and moved on. The pipeline shows green.`,
+    badge: 'TESTS (1, MEANINGLESS)',
+  },
+
+  // ══ CODE QUALITY +10 (code-11 → code-20)
+
+  {
+    id: 'code-11', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'critical',
+    text: `No input validation anywhere in this API. Every field from a request goes directly into business logic — no type checking, no length limits, no sanitization. This isn't an API. It's a direct line into your application logic for anyone who knows the endpoint.`,
+    badge: 'UNVALIDATED EVERYTHING',
+  },
+  {
+    id: 'code-12', tier: 'code_quality', repoTypes: ['frontend', 'backend', 'generic'],
+    severity: 'warning',
+    text: `Every API call catches errors and sets a variable to true. Not to the error message. Not to the error code. Just true. When something fails, the UI knows something failed and cannot tell the user what, why, or what to do. You built an error handler that destroys the error.`,
+    badge: 'ERROR = TRUE',
+  },
+  {
+    id: 'code-13', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'critical',
+    text: `Database query inside a for loop. One query per item. 200 items means 200 sequential queries on every page load. Everyone who uses this app waits for 200 database round trips before they see anything. Nobody measured this before shipping it.`,
+    badge: 'N+1 SHIPPED',
+  },
+  {
+    id: 'code-14', tier: 'code_quality', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `11 different functions that check if a user is authenticated, written separately, with different logic. Some check session. Some check JWT. Some check neither in certain edge cases. Nobody knows which one is correct. All 11 are in active use. The authentication is a lottery.`,
+    badge: 'AUTH LOTTERY',
+  },
+  {
+    id: 'code-15', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'note',
+    text: `The constants file is 847 lines, imports from 12 other files, and 3 of those are circular. It's imported by everything. Changing one constant triggers a cascade of re-imports across the entire codebase. You built a dependency that everything depends on and then made it a circular mess.`,
+    badge: 'CIRCULAR CONSTANTS',
+  },
+  {
+    id: 'code-16', tier: 'code_quality', repoTypes: ['frontend'],
+    severity: 'warning',
+    text: `The component re-renders on every keystroke and fires an API call on every render. Typing a 10-character search sends 10 API calls. Nobody measured this. Nobody set up debouncing. Every user is funding 10x the necessary API calls and waiting for responses that are immediately discarded.`,
+    badge: 'KEYSTROKE API FLOOD',
+  },
+  {
+    id: 'code-17', tier: 'code_quality', repoTypes: ['backend', 'generic'],
+    severity: 'critical',
+    text: `SQL queries built with string concatenation. User input goes directly into the string. This is textbook SQL injection. This has been a known vulnerability since 1998. Parameterized queries exist and have existed for decades. You chose string concatenation anyway.`,
+    badge: 'SQL INJECTION OPEN',
+  },
+  {
+    id: 'code-18', tier: 'code_quality', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `200+ lines of dead code in this file, some commented out, some just unreachable. None of it removed. Every developer who opens this file reads through 200 lines that do nothing before finding what they came for. You had the chance to delete it. You kept it.`,
+    badge: '200 LINES OF NOTHING',
+  },
+  {
+    id: 'code-19', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'note',
+    text: `index.js is 1,200 lines. Every feature, helper, config, and handler lives in one file. Adding anything to this project means opening 1,200 lines, finding the right place, and hoping you don't break something adjacent. You have one file where there should be twenty.`,
+    badge: '1200-LINE INDEX',
+  },
+  {
+    id: 'code-20', tier: 'code_quality', repoTypes: ['backend', 'generic'],
+    severity: 'critical',
+    text: `Passwords stored in plaintext in the database. Not hashed, not salted. Plaintext. Anyone with read access to the users table has every user's password. If this database leaks — and databases leak — every password is immediately readable. This is not a nuance or an edge case. This is a fundamental failure.`,
+    badge: 'PLAINTEXT PASSWORDS',
+  },
+
+  // ══ REPO TYPE: FRONTEND +7 (rt-frontend-02 → rt-frontend-08)
+
+  {
+    id: 'rt-frontend-02', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'warning',
+    text: `Inline styles on 47 different components as the primary styling method. There's a CSS file that's mostly empty. The styling is scattered across JSX as inline objects that can't be overridden, can't be themed, can't be searched. Every UI change is a hunt through component files.`,
+    badge: 'INLINE STYLE SPRAWL',
+  },
+  {
+    id: 'rt-frontend-03', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'critical',
+    text: `Everything is stored in one top-level useState. Every state change triggers a full re-render of every component on the page. Someone went out of their way to avoid any state management pattern and built a setup where a checkbox triggers a full-app re-render. Nobody profiled this before shipping.`,
+    badge: 'ONE STATE TO RULE ALL',
+  },
+  {
+    id: 'rt-frontend-04', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'note',
+    text: `No alt text. No form labels. No focus states. Screen readers can't navigate this app. Keyboard users can't use it. This wasn't an oversight — these were just never built. That's a real decision that affects real users every day this ships without them.`,
+    badge: 'ACCESSIBILITY ZERO',
+  },
+  {
+    id: 'rt-frontend-05', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'warning',
+    text: `14 API calls on initial load before rendering anything. Every user waits for all 14 to complete before they see content. On a slow connection that's 8+ seconds of blank screen. Nobody measured time to first contentful paint. The number 14 appeared gradually and nobody stopped to count.`,
+    badge: '14 CALLS TO RENDER',
+  },
+  {
+    id: 'rt-frontend-06', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'critical',
+    text: `API keys hardcoded in frontend JavaScript. Not environment variables — actual strings in the shipped bundle. Anyone who opens DevTools can read them. Anyone who downloads the bundle has them. The keys have been public since the first deploy.`,
+    badge: 'KEYS IN THE BUNDLE',
+  },
+  {
+    id: 'rt-frontend-07', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'warning',
+    text: `6 different button components written by 6 different developers who didn't check if one already existed. All 6 look slightly different. Users get 6 different hover states, 6 different click behaviors, 6 different loading states across the same app. The UI is not inconsistent by accident.`,
+    badge: 'SIX BUTTONS',
+  },
+  {
+    id: 'rt-frontend-08', tier: 'repo_type', repoTypes: ['frontend'],
+    severity: 'note',
+    text: `The mobile layout was last tested on a real device 2 years ago. Since then: 3 new features added, none checked on mobile. The responsive breakpoints handle screen widths no current device uses. Real users on real phones are seeing a layout nobody has looked at in 2 years.`,
+    badge: 'MOBILE UNTESTED (2YR)',
+  },
+
+  // ══ REPO TYPE: BACKEND +6 (rt-backend-03 → rt-backend-08)
+
+  {
+    id: 'rt-backend-03', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'critical',
+    text: `No rate limiting on this API. Any client can make unlimited requests. No throttling, no backoff, no circuit breaker. Someone with a basic script can take this service down in minutes and it would be indistinguishable from a traffic spike. There's no way to tell the difference because nothing measures it.`,
+    badge: 'NO RATE LIMIT',
+  },
+  {
+    id: 'rt-backend-04', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'warning',
+    text: `Response times range from 80ms to 14 seconds depending on the code path. No timeouts, no slow query logging, no alerting on latency. Users occasionally wait 14 seconds and nobody knows because nothing is measuring it. The monitoring is users filing support tickets.`,
+    badge: '14 SECOND RESPONSES',
+  },
+  {
+    id: 'rt-backend-05', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'note',
+    text: `The API returns the full database row on every request — password hashes, internal IDs, admin flags, audit timestamps. The client receives data it didn't ask for and absolutely should not have. Every response is a data leak you designed into the API contract.`,
+    badge: 'FULL ROW LEAK',
+  },
+  {
+    id: 'rt-backend-06', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'critical',
+    text: `CORS is set to '*'. Every origin is allowed. Every request from every domain is accepted without verification. Any website on the internet can make authenticated requests to this API on behalf of your users. That's not an open API. That's no API security at all.`,
+    badge: 'CORS WILDCARD',
+  },
+  {
+    id: 'rt-backend-07', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'warning',
+    text: `No database indexes on the columns used in WHERE clauses. Every query does a full table scan. On a table with 100k rows this is slow. On a table with 1M rows this takes down the service. Nobody added indexes. Nobody measured query time before shipping this.`,
+    badge: 'NO INDEXES',
+  },
+  {
+    id: 'rt-backend-08', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'critical',
+    text: `No API versioning. Every breaking change is deployed directly to the current endpoint with no warning, no migration path, no deprecation notice. Clients discover breaking changes when they start getting 500 errors. That's how you told them something changed.`,
+    badge: 'BREAKING CHANGES SILENT',
+  },
+
+  // ══ REPO TYPE: GENERIC +7 (rt-generic-02 → rt-generic-08)
+
+  {
+    id: 'rt-generic-02', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `The license file says MIT. The README says "all rights reserved." These directly contradict each other. Anyone who used this under MIT is either safe or infringing and there's no way to know which. You published two conflicting legal terms and never noticed.`,
+    badge: 'LICENSE CONTRADICTION',
+  },
+  {
+    id: 'rt-generic-03', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `Dependencies haven't been updated in 2 years. 14 known CVEs in the current dependency tree, 3 rated critical. They're visible in npm audit output. They've been there for months. Either nobody ran npm audit, or someone ran it and closed the terminal.`,
+    badge: '14 KNOWN CVES',
+  },
+  {
+    id: 'rt-generic-04', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'note',
+    text: `The changelog says "various improvements" for every release since 0.3.0. Not what improved. Not what changed. Not what broke. Anyone upgrading this dependency has no idea what changed between versions. They're upgrading blind and trusting that "various improvements" means nothing broke.`,
+    badge: 'VARIOUS IMPROVEMENTS',
+  },
+  {
+    id: 'rt-generic-05', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `Three different config files for the same tool in the root directory with conflicting rules. Which one the linter uses depends on the version and the developer's local setup. The linting is inconsistent between machines. Two developers can have different linting results on the same file.`,
+    badge: 'THREE CONFIGS, ONE TOOL',
+  },
+  {
+    id: 'rt-generic-06', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `The .gitignore doesn't include .env. The .env file has been committed 4 times. Real credentials are in the git history since the initial commit. Removing them from the working tree doesn't remove them from history. Those credentials are still there and always will be.`,
+    badge: '.ENV IN HISTORY',
+  },
+  {
+    id: 'rt-generic-07', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `No contributing guide, no style guide, no PR template, no issue template. Every contributor does things differently. The codebase has 8 different indentation styles, 4 quote preferences, and 3 naming conventions, all in active use. The inconsistency compounds with every new contributor.`,
+    badge: 'CONTRIBUTING: NOTHING',
+  },
+  {
+    id: 'rt-generic-08', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'note',
+    text: `The project description says "blazing fast." The benchmark behind that claim was run on the author's machine with a 3-item dataset. No production benchmarks have been published. "Blazing fast" is a marketing claim with a 3-item proof. Everyone using this at scale is finding out what that means.`,
+    badge: 'BLAZING FAST (3 ITEMS)',
+  },
+
+  // ══ REPO TYPE: CONFIG/INFRA +5 (rt-infra-02 → rt-infra-06)
+
+  {
+    id: 'rt-infra-02', tier: 'repo_type', repoTypes: ['config_infra'],
+    severity: 'critical',
+    text: `The production database backup runs daily. The last time a restore was tested: never. A backup that has never been tested is not a backup. It's a file that exists until the moment you need it, at which point you find out whether it was ever valid.`,
+    badge: 'BACKUP NEVER TESTED',
+  },
+  {
+    id: 'rt-infra-03', tier: 'repo_type', repoTypes: ['config_infra'],
+    severity: 'warning',
+    text: `Kubernetes resource limits all set to unlimited. In any resource contention scenario, one misbehaving pod can consume all available CPU and memory on the node, taking down every other service running there. No limits means no isolation. That's not a cluster, it's a shared failure domain.`,
+    badge: 'UNLIMITED RESOURCES',
+  },
+  {
+    id: 'rt-infra-04', tier: 'repo_type', repoTypes: ['config_infra'],
+    severity: 'note',
+    text: `3 different Terraform state files for the same infrastructure in 3 different locations, none referencing each other. Nobody is certain which one reflects the actual current state. Changes applied from the wrong state file will overwrite what's actually running in production.`,
+    badge: 'THREE STATE FILES',
+  },
+  {
+    id: 'rt-infra-05', tier: 'repo_type', repoTypes: ['config_infra'],
+    severity: 'critical',
+    text: `SSH port open to 0.0.0.0/0. Every IP address in the world can attempt to connect. The server logs show 40,000 failed login attempts in the last 24 hours. Nobody is monitoring this. Nobody has restricted access. The brute force attempts are ongoing right now as you read this.`,
+    badge: 'SSH OPEN TO WORLD',
+  },
+  {
+    id: 'rt-infra-06', tier: 'repo_type', repoTypes: ['config_infra'],
+    severity: 'warning',
+    text: `No health check on the load balancer. When a service goes down, traffic keeps routing to it. Users get connection errors until someone manually notices and removes the instance. The detection system for outages is users filing support tickets. That's the monitoring you shipped.`,
+    badge: 'NO HEALTH CHECK',
+  },
+
+  // ══ REPO TYPE: ML/DATA +4 (rt-ml-02 → rt-ml-05)
+
+  {
+    id: 'rt-ml-02', tier: 'repo_type', repoTypes: ['ml_data'],
+    severity: 'critical',
+    text: `Train/test split happened after feature engineering on the full dataset. The model has seen information from the test set during training. The accuracy numbers are not real. The model will perform differently on unseen data and nobody measured what that performance actually is.`,
+    badge: 'DATA LEAKAGE',
+  },
+  {
+    id: 'rt-ml-03', tier: 'repo_type', repoTypes: ['ml_data'],
+    severity: 'warning',
+    text: `Model trained on 2020 data, running in production in 2025. No drift detection set up. Nobody has measured whether the training distribution still matches current inputs. The model is answering questions about a world that may no longer look like its training set.`,
+    badge: 'MODEL DRIFT IGNORED',
+  },
+  {
+    id: 'rt-ml-04', tier: 'repo_type', repoTypes: ['ml_data'],
+    severity: 'note',
+    text: `Feature names in the training code are x1 through x47. Not named after what they represent. The person who knows what x23 means left the company. The model makes 47-dimensional decisions and 44 of those dimensions are undocumented. Nobody maintaining this can explain what the model is actually using.`,
+    badge: 'X1 THROUGH X47',
+  },
+  {
+    id: 'rt-ml-05', tier: 'repo_type', repoTypes: ['ml_data'],
+    severity: 'warning',
+    text: `Model outputs in production are never logged. No record of what predictions were made, on what inputs, with what confidence. When the model produces a wrong answer there's nothing to debug it with. You have a model making real decisions with no audit trail.`,
+    badge: 'NO PREDICTION LOG',
+  },
+
+  // ══ REPO TYPE: MARKDOWN +2 (rt-markdown-04 → rt-markdown-05)
+
+  {
+    id: 'rt-markdown-04', tier: 'repo_type', repoTypes: ['markdown_collection'],
+    severity: 'warning',
+    text: `47% of the links in this repo return 404 or redirect to a domain that no longer hosts the original content. The CI pipeline checking this has been failing silently for 3 months. The list is curated the same way any garbage pile grows: things get added, nothing gets removed.`,
+    badge: '47% DEAD LINKS',
+  },
+  {
+    id: 'rt-markdown-05', tier: 'repo_type', repoTypes: ['markdown_collection'],
+    severity: 'note',
+    text: `Last meaningfully updated 2 years ago. Libraries listed have been deprecated. Tools have been superseded. Three of the listed repos have been archived by their authors. The list is still described as "actively maintained." Anyone using this as a reference is working from stale information they were told was current.`,
+    badge: 'ACTIVELY STALE',
+  },
 ]
 
 // ─── ROTATION + SELECTION LOGIC ───────────────────────────────────────────────
