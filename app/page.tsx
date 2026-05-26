@@ -508,6 +508,9 @@ export default function LandingPage() {
       <section className="hero" ref={heroSectionRef}>
         <HeroParticles />
         <div className="hero-glow" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.jpeg" alt="Garfield" className="logo-glow" style={{ width: 160, height: 160, objectFit: 'cover', borderRadius: '50%', marginBottom: 28, border: '1px solid rgba(234,140,30,0.25)' }} />
+
         <pre className="hero-ascii" ref={heroRef}>{HERO_TIMELINE[0].t}</pre>
 
         <div className="hero-eyebrow">

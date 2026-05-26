@@ -6,7 +6,8 @@ export default function Navbar() {
   return (
     <nav className="nav">
       <div className="nav-logo" onClick={() => router.push('/')}>
-        <span className="logo-icon">ᗢ</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.jpeg" alt="Garfield" style={{ height: 28, width: 28, objectFit: 'cover', borderRadius: 4, filter: 'drop-shadow(0 0 5px rgba(234,140,30,0.6))' }} />
         GARFIELD ROAST
         <span className="nav-claude-badge">CLAUDE</span>
       </div>

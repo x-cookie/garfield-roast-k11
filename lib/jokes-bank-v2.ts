@@ -238,6 +238,72 @@ export const JOKES_BANK: GarfieldJoke[] = [
     text: `The model achieves 99.7% accuracy on the training set. On the held-out test set: 61%. On production data collected after deployment: 43%. The README features the 99.7% number in the title, the description, the badges, and the first paragraph. The 61% and 43% numbers appear nowhere in the repository, the paper, the blog post, or the conference talk given about this model. Garfield has consumed lasagna that looked significantly better than it tasted. He recognizes this pattern with the instinct of someone who has been disappointed by packaging before. The packaging is exceptional. The contents are a different conversation entirely.`,
     badge: 'TRAINING SET CONFIDENCE',
   },
+
+  // ══ TIER A+: DARK / EXISTENTIAL GARFIELD
+
+  {
+    id: 'gf-09', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `I have stared into many voids. I stare into the void every Monday. I stare into it when Jon serves diet cat food and calls it dinner. I stare into it at 3am when Odie breathes too loudly. But none of those voids have stared back at me with the specific flavor of emptiness I found inside this catch block: catch(e) {}. Two braces. No body. No log. No rethrow. The developer saw an error, acknowledged its existence, gave it two empty walls as a home, and walked away. That error is still free. It is failing silently in production right now. It has been failing silently for months. It will continue to fail silently until someone, somewhere, opens a support ticket and asks why nothing works. Write console.error(e). I should not have to explain this to a person who owns a keyboard.`,
+    badge: 'VOID DETECTED',
+  },
+  {
+    id: 'gf-10', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'critical',
+    text: `Congratulations on hardcoding the API key directly into the source file and committing it to version control. Truly. A bold choice. Most developers — burdened by the inconvenience of thinking more than 30 seconds ahead — would have put it in a .env file, a technology that has existed since approximately the Jurassic period of software development. But not here. Here the key sits in the code. Aging. Exposed. Readable by anyone who has ever heard of GitHub. A future security researcher will find this commit and they will screenshot it and they will not be kind about what they say. It takes eleven characters to type process.env.API_KEY. I counted. You have no excuse. Move it.`,
+    badge: 'CONGRATULATIONS',
+  },
+  {
+    id: 'gf-11', tier: 'garfield', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `I fell asleep reading this function. I am not exaggerating for comic effect — I made it to line 31, where the function calls itself recursively for reasons that the code does not explain and the comments do not address, and I lost consciousness. I dreamed about the function. In the dream it had documentation. In the dream there was a base case. In the dream the developer had drawn a diagram before writing this. I woke up. The function was still there. I read it again. It still doesn't have a base case that I can find with confidence. I went back to sleep. I am writing this review from a state of partial unconsciousness and my recommendation is: document the recursion, add the base case explicitly, and explain why this function exists. Do it for whoever reads this after me. Do it because I cannot.`,
+    badge: 'GARFIELD GIVES UP',
+  },
+
+  // ══ TIER B+: DEV CULTURE DARK
+
+  {
+    id: 'dev-09', tier: 'dev_culture', repoTypes: ['generic'],
+    severity: 'warning',
+    text: `There is a comment on line 47 that reads "temporary fix — remove before release." It was written 1,142 days ago. The release happened on day 4. The developer who wrote "temporary" is now employed at a different company in a different city and has started a family. Their replacement doesn't know the comment exists. The replacement's replacement doesn't know the replacement existed. The codebase has been migrated across three hosting providers, survived two all-hands incidents described in postmortems as "unrelated to this component," and been partially rewritten twice. The temporary fix survived all of it. It is foundational now. It is the thing holding the adjacent system together through a mechanism nobody has fully mapped. You can't remove it. You can't explain it. You can only preserve it and feel vaguely guilty when it comes up in conversation.`,
+    badge: 'IMMORTAL WRONG',
+  },
+  {
+    id: 'dev-10', tier: 'dev_culture', repoTypes: ['frontend', 'backend', 'generic'],
+    severity: 'note',
+    text: `This project has lodash as a production dependency. It uses lodash.get exactly once, in a file called utils/helpers/misc/general/index.ts, on a single line, to access a nested property that could have been accessed with optional chaining — a JavaScript feature that has been available since 2019 and requires zero npm packages to use. The production bundle ships 4.2MB of lodash to every user who loads this application so that one developer, on one occasion, could avoid typing a question mark followed by a dot. I have thought about this for longer than I am comfortable admitting. I have reached no useful conclusion. I went and had some lasagna. The lodash import was still there when I came back.`,
+    badge: '4.2MB FOR A DOT',
+  },
+
+  // ══ TIER C+: CODE QUALITY DARK / SURREAL
+
+  {
+    id: 'code-09', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
+    severity: 'critical',
+    text: `The variable is named data. Its TypeScript type is any. It is passed through six consecutive functions. Each function receives it as data. Each function types it as any. By the time data reaches the rendering layer, it could be a string, a number, an object, an array, null, undefined, or a malformed API response that three layers of type erasure have successfully hidden from everyone involved. TypeScript is installed. TypeScript is configured. TypeScript is watching every file. TypeScript has been suppressed with @ts-ignore on four separate occasions. The developer installed a type system and then defeated it manually, function by function, like they had a personal grievance against type safety. I want to understand this. I have tried. I cannot.`,
+    badge: 'TYPESCRIPT DEFEATED',
+  },
+  {
+    id: 'code-10', tier: 'code_quality', repoTypes: ['frontend'],
+    severity: 'warning',
+    text: `There are 14 z-index values in this stylesheet. The lowest is 1. The highest is 99999. In between: 100, 200, 999, 1000, 1001, 9000, 9999, 10000, 10001, 99998, and two that are simply "inherit." I can reconstruct the entire history of this frontend from these numbers alone. A developer needed something to appear on top of something else. They tried z-index: 1. It didn't work. They tried 100. Still didn't work. Each escalation represents a moment of real despair — a person losing a war against their own stylesheet, adding zeros like prayer. z-index: 99999 is not a number. It is a developer at 2am who has given up on understanding why and has chosen instead to simply overwhelm the problem with size. Create a z-index scale with six named levels and commit to it. I know you will not. I am noting it for the record.`,
+    badge: 'Z-INDEX ARMS RACE',
+  },
+
+  // ══ TIER D+: REPO-TYPE SPECIFIC
+
+  {
+    id: 'rt-backend-02', tier: 'repo_type', repoTypes: ['backend'],
+    severity: 'critical',
+    text: `The API endpoint reads req.body.userId on line 3 and passes it directly to a database query on line 4. There is no null check. There is no type validation. There is no schema verification. There is nothing between user input and database query except one line of whitespace and the developer's faith that the incoming data will be well-formed. That faith has been broken every time someone sends a malformed request. The server crashes. The logs say "cannot read property id of undefined." Someone restarts it. Everyone moves on. Nobody adds validation. The faith is restored. The cycle continues. Validate req.body before touching it. I am writing this from a couch and even from here the correct approach is obvious.`,
+    badge: 'NULL POINTER FAITH',
+  },
+  {
+    id: 'rt-generic-01', tier: 'repo_type', repoTypes: ['generic'],
+    severity: 'note',
+    text: `This repository has one commit. The message is "initial commit." It was made 312 days ago. There are no other commits. The README says "work in progress — coming soon." It has said this for 312 days. The issues tab is empty. There are no branches. No contributors. No stars. No forks. The developer created the repository, assembled a structure, and then made a decision that has not yet been completed. The repository is waiting. It will keep waiting. The commit history is a monument to a promise made to nobody in particular, preserved in version control forever, publicly visible to anyone who finds it. I do not judge this. I spend most of my time not doing things either. But I have a lasagna. This repository has only its initial commit. The situations are not equivalent.`,
+    badge: 'INITIAL COMMIT FOREVER',
+  },
 ]
 
 // ─── ROTATION + SELECTION LOGIC ───────────────────────────────────────────────

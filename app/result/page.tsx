@@ -480,7 +480,9 @@ export default function ResultPage() {
             {activeTab === 'verdict' && (
               <div>
                 {/* Score card */}
-                <div className="score-card" id="roast-card">
+                <div className="score-card" id="roast-card" style={{ position: 'relative' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo.jpeg" alt="" aria-hidden style={{ position: 'absolute', top: 10, right: 10, width: 32, height: 32, objectFit: 'cover', borderRadius: '50%', opacity: 0.18, pointerEvents: 'none' }} />
                   <div className="score-lbl">
                     {result.repoType?.toUpperCase().replace(/_/g, ' ') || 'CODE QUALITY'}
                   </div>
