@@ -93,10 +93,143 @@ function Badge({ children, color = 'orange' }: { children: string; color?: 'oran
   );
 }
 
+const DOCS_TIMELINE: { t: string; ms: number }[] = [
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  -.-  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 150
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  -.-  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 150
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.◉  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (  =)  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  (=  )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.o  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 200
+  },
+  {
+    t: `    /\\___/\\ \n   (  -.-  )\n   ( = - = )\n   /       \\\n  |  ( ≡ )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 150
+  },
+  {
+    t: `    /\\___/\\ \n   (  ◉.◉  )\n   ( = ~ = )\n   /       \\\n  |  (   )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 1000
+  },
+  {
+    t: `    /\\___/\\ \n   (  o.o  )\n   ( = ~ = )\n   /       \\\n  |  (   )  |\n   \\  _ _  /\n  ▓▓▓▓▓▓▓▓▓▓▓`,
+    "ms": 500
+  }
+];
+
 export default function DocsPage() {
   const router = useRouter();
   const [active, setActive] = useState('overview');
   const mainRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLPreElement>(null);
+  const frameIdx = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    function tick() {
+      const frame = DOCS_TIMELINE[frameIdx.current];
+      if (heroRef.current) heroRef.current.textContent = frame.t;
+      frameIdx.current = (frameIdx.current + 1) % DOCS_TIMELINE.length;
+      timerRef.current = setTimeout(tick, frame.ms);
+    }
+    timerRef.current = setTimeout(tick, 0);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
@@ -159,6 +292,7 @@ export default function DocsPage() {
 
       {/* Docs hero */}
       <div style={{ padding: '52px 40px 44px', textAlign: 'center', borderBottom: '1px solid var(--border)', background: 'radial-gradient(ellipse 55% 60% at 50% 0%, rgba(234,140,30,0.06) 0%, transparent 70%)' }}>
+        <pre className="hero-ascii" ref={heroRef} style={{ margin: '0 auto 24px', fontSize: 'clamp(8px, 1vw + 4px, 12px)' }}>{DOCS_TIMELINE[0].t}</pre>
         <span className="tag" style={{ marginBottom: '24px', display: 'inline-block' }}>[ TECHNICAL DOCS ]</span>
         <h1 style={{ fontSize: 'clamp(28px,4.5vw,56px)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: '14px' }}>
           How Garfield<br /><span style={{ color: 'var(--orange)' }}>judges your code.</span>
