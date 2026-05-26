@@ -315,7 +315,6 @@ export default function LandingPage() {
 
       <section className="hero" ref={heroSectionRef}>
         <HeroParticles />
-        <div className="hero-glow" />
 
         {/* Left: CTA */}
         <div className="hero-left">
