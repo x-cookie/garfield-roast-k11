@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
   let rawResponse: string;
   try {
     const completion = await client.chat.completions.create({
-      model: 'nvidia/nemotron-nano-9b-v2',
+      model: 'google/gemini-2.0-flash-lite-001',
       max_tokens: 1400,
       messages: [
         { role: 'system', content: systemPrompt },
