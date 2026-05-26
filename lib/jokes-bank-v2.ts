@@ -46,49 +46,49 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'gf-01', tier: 'garfield', repoTypes: ['generic'],
     severity: 'warning',
-    text: `Garfield has a life philosophy: do as little as possible, do it slowly, and do it surrounded by lasagna. This codebase has adopted the exact same philosophy — minimum effort, maximum presence, zero nutritional value. The difference is that Garfield's laziness is charming because it's intentional and self-aware. This codebase is lazy the way a car is lazy when its engine has fallen out. It's not a philosophy. It's a crime scene.`,
+    text: `This codebase has one setting: minimum. Minimum naming, minimum structure, minimum effort at every level. Everyone who touches this after you is going to spend half their time figuring out what you meant instead of doing what they came to do. You built a puzzle when you were supposed to build a tool.`,
     badge: 'GARFIELD PHILOSOPHY',
   },
   {
     id: 'gf-02', tier: 'garfield', repoTypes: ['generic'],
     severity: 'critical',
-    text: `Garfield has spent 40+ years hating Mondays with a passion that borders on spiritual. He has written poems about it. He has stared into the void of Monday mornings and found them staring back. And yet — after reviewing this repository — he has upgraded his feelings. Mondays are now tolerable. Mondays are now fine. Mondays are now a pleasant alternative to the experience of reading this codebase. You have achieved something remarkable: you made Garfield miss Mondays.`,
+    text: `Zero tests, no docs, and a commit history that reads like a panic attack. Every person who inherits this has to start from scratch figuring out what's safe to change. You left them nothing to work with. That wasn't an accident — that was every decision you made, accumulated.`,
     badge: 'WORSE THAN MONDAY',
   },
   {
     id: 'gf-03', tier: 'garfield', repoTypes: ['generic'],
     severity: 'warning',
-    text: `Garfield's diet has been "lasagna and contempt" for four decades. Veterinarians have expressed concern. Nutritionists have written papers. Jon has cried. Garfield has not adjusted. After reviewing this codebase, he is adding a third item to his diet: existential dread at the state of the software industry. It pairs well with Monday mornings and poorly-named functions. The caloric content is negative. The psychological damage is incalculable. He will not recover.`,
+    text: `No test coverage on a production codebase. Not even a basic smoke test. Every deploy from now on is a guess. Every change is a gamble. The people after you have no way to know if they broke something until a user finds it for them. You designed it that way by not designing it at all.`,
     badge: 'CONTEMPT ENHANCED',
   },
   {
     id: 'gf-04', tier: 'garfield', repoTypes: ['generic'],
     severity: 'note',
-    text: `Odie once ran directly into a wall at full speed. Nose-first. Eyes wide open. He saw the wall. He continued toward the wall. He hit the wall. He got up, tail wagging, and immediately moved toward the wall again with the same energy. This was universally considered to be one of the dumbest things anyone had ever witnessed. Garfield watched it 14 times. Garfield has now read this codebase. He would like to formally apologize to Odie. Odie was, in fact, learning. This codebase has run into the same wall in every single commit since the beginning of time, and the git log suggests it considers this normal.`,
+    text: `This repo has made the same mistake across four consecutive commits. Not different mistakes. The same one. Whoever maintains this is going to find the pattern and have no idea whether it's intentional or not, because nothing here explains anything.`,
     badge: 'ODIE > CODEBASE',
   },
   {
     id: 'gf-05', tier: 'garfield', repoTypes: ['generic'],
     severity: 'critical',
-    text: `Jon once suggested that Garfield should write a journal. Garfield wrote one entry: "Monday. Hated it." He then closed the journal and went back to sleep. It remains the most efficient documentation of all time — one sentence, maximum information density, total emotional clarity. This README, by contrast, is eleven paragraphs long and contains less useful information than Garfield's single journal entry. "Getting started: see below. Installation: coming soon. Usage: refer to source." This is not documentation. This is a handshake with someone who has already left the building.`,
+    text: `The README says "installation: coming soon." It has said this for over a year. Nobody who clones this can run it without finding you personally and asking. You are the documentation. You made yourself the single point of failure for your own project and then stopped being available.`,
     badge: 'WORSE THAN ONE JOURNAL ENTRY',
   },
   {
     id: 'gf-06', tier: 'garfield', repoTypes: ['generic'],
     severity: 'warning',
-    text: `Garfield has, in his lifetime, consumed enough lasagna to feed a small village for several years. He has no regrets. He has also, through this consumption, developed what can only be described as a spiritual relationship with quality. He knows good lasagna. He knows bad lasagna. He has opinions. His opinion on a codebase with zero test coverage is the same face he makes when Jon serves him plain rice and calls it dinner: a silence so heavy it has physical mass. A disappointment that radiates outward like a dying sun. If Jon's rice was a codebase, it would have better coverage than this.`,
+    text: `Zero test coverage in production. Every deploy is a bet. Every hotfix is a new bet stacked on the old one. Someone downstream is going to make a change that breaks everything and have no way to know it broke, because you left nothing to check against.`,
     badge: 'DIET CAT FOOD ENERGY',
   },
   {
     id: 'gf-07', tier: 'garfield', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'critical',
-    text: `In 1978, Garfield debuted in 41 newspapers. By 2026, he appears in 2,500 newspapers across 111 countries in 41 languages. That is measurable growth. That is compounding value. That is a work ethic disguised as laziness — every strip, every Monday, every Odie joke, shipped on time, without exception. In that same span of time, this codebase has shipped exactly zero unit tests. Not a single one. Not a describe block, not a test file with only imports, not even a test that passes by accident. Garfield has been more productive than your entire QA strategy. Garfield. The cat who naps professionally.`,
+    text: `Not a single test file in this entire repo. Not one describe block, not one assertion. Every person who changes anything in here is changing it blind. You built a system with no way to verify it works and then asked other people to maintain it.`,
     badge: '0 TESTS SINCE 1978',
   },
   {
     id: 'gf-08', tier: 'garfield', repoTypes: ['generic'],
     severity: 'note',
-    text: `Garfield once famously said: "I'm not overweight. I'm under-tall." This is the greatest piece of reframing ever committed to a comic strip. It is technically true. It is emotionally compelling. It redirects the conversation entirely. This repository README says: "This project is not unmaintained — it's in a stable state." That is Garfield logic. That is the exact same sentence structure applied to software abandonment. Garfield invented this technique. He uses it for personal dignity. Applying it to a git repository that hasn't had a commit in 14 months is a misuse of the technology he pioneered, and he wants credit.`,
+    text: `The README says "this project is in a stable state." The last commit was 14 months ago. 47 open issues. Three labeled critical. You wrote "stable" and closed the tab, and that word has been doing all the work of maintaining this project ever since.`,
     badge: 'GARFIELD LOGIC DETECTED',
   },
 
@@ -97,49 +97,49 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'dev-01', tier: 'dev_culture', repoTypes: ['generic'],
     severity: 'critical',
-    text: `The first commit message was "initial commit." The second was "fix." The third was "fix 2." The fourth was "ok this time for real." The fifth was "PLEASE WORK." The sixth was "." — a single period, which is the commit message of a person who has stopped believing in language. The seventh was "wip" — a work-in-progress label applied to code that was shipped to production nine months ago and has not been touched since. Together these commit messages form the most tragic autobiography ever written. Nobody asked for it. It was written anyway.`,
+    text: `The commit history is: "initial commit", "fix", "fix 2", "ok this time for real", "PLEASE WORK", and a single period. That's it. That's the entire context anyone has for understanding what happened in this codebase. When something breaks, this is what people search through to find out why. You gave them nothing.`,
     badge: 'COMMIT AUTOBIOGRAPHY',
   },
   {
     id: 'dev-02', tier: 'dev_culture', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'warning',
-    text: `Scattered throughout this codebase like breadcrumbs left by a developer in crisis are the following console.log statements: "here", "HERE", "test", "test2", "test2222", "aaa", "aaaaaa", "ok", "ok wtf", "WHYYYY", "why does this keep happening", "im going insane" and one that says simply "no." These are not debugging statements. These are a timeline. This is what a developer sounds like at 2am when the code has stopped making sense and caffeine has stopped working and the only remaining tool is screaming into a terminal window. The logs were never removed. They are in production. Right now. Someone is reading them in a real environment wondering what "WHYYYY" means.`,
+    text: `There are console.logs that say "here", "aaa", "ok wtf", and "WHYYYY" still in production code. Someone is reading these in a real environment right now trying to figure out what they mean. They mean nothing. You left them and forgot them and now they're part of the production experience.`,
     badge: '2AM DEBUGGING EVIDENCE',
   },
   {
     id: 'dev-03', tier: 'dev_culture', repoTypes: ['generic'],
     severity: 'critical',
-    text: `The README installation section says "coming soon." It has said "coming soon" for 14 months. In that time: three JavaScript frameworks have been released, deprecated, and ironically revived; two "revolutionary" state management libraries have been abandoned mid-hype cycle; one developer wrote an entire blog post about this specific README saying "coming soon" as an example of open source decay. The blog post has more documentation than the README. The blog post explains how to install the software better than the README. The blog post author has more stars on their GitHub than this project. This is the legacy of "coming soon."`,
+    text: `The installation section says "coming soon." It has said this for 14 months. Anyone who wants to use this has had to either figure it out themselves or find someone who already knows. You made your own project inaccessible by default and then left it that way.`,
     badge: 'COMING NEVER',
   },
   {
     id: 'dev-04', tier: 'dev_culture', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'warning',
-    text: `The Stack Overflow answer used here was posted in 2013. It was answered by a user whose account no longer exists. The answer was marked as deprecated in 2016 with a comment that says "DO NOT USE IN PRODUCTION." The comment has 847 upvotes. The code was copy-pasted directly into this project in 2024, deprecation comment stripped, warning note removed, production flag ignored. It is now running in production. The original deprecated code is doing real work with real users. The 847 people who warned against this are, presumably, still warning against this, but somewhere else, where nobody can hear them.`,
+    text: `The code here is copy-pasted from a 2013 Stack Overflow answer that has a pinned comment with 847 upvotes saying "DO NOT USE IN PRODUCTION." The deprecation warning was stripped before committing. That code is in production right now. The 847 people who warned against it were right.`,
     badge: 'VINTAGE STACK OVERFLOW',
   },
   {
     id: 'dev-05', tier: 'dev_culture', repoTypes: ['frontend', 'backend', 'generic'],
     severity: 'note',
-    text: `package.json says version 1.0.0. It has always said version 1.0.0. Through 47 commits, 3 complete rewrites, 2 breaking API changes, a migration from one database to an entirely different one, and one incident described in the git log only as "the thing that happened in August" — through all of this, through every earthquake of technical change — version 1.0.0 has remained. Immovable. Unchanging. A monument to a developer who learned about semantic versioning once and found it inconvenient. Version 1.0.0 has witnessed more change than most software projects experience in their entire lifespan. It is immortal through sheer neglect.`,
+    text: `Still on version 1.0.0 through 47 commits, 3 rewrites, 2 breaking API changes, and a database migration. Everyone integrating with this has no way to know what changed or when. Semantic versioning exists for this exact reason. You just chose not to use it.`,
     badge: 'ETERNAL VERSION 1.0.0',
   },
   {
     id: 'dev-06', tier: 'dev_culture', repoTypes: ['generic'],
     severity: 'critical',
-    text: `The branches in this repository are named as follows: main, main-backup, main-old, main-new, main-new-final, main-new-final-v2, main-new-final-v2-PLEASE-USE-THIS, main-new-final-v2-PLEASE-USE-THIS-for-real, main-ACTUALLY-USE-THIS-ONE, and a branch simply called "the-real-one." Git was invented in 2005 specifically so that developers would not need to name files like Microsoft Word documents from 2003. The entire purpose of branching is to avoid the naming convention currently in use here. This is not version control. This is a filing cabinet that someone has tipped over and set on fire while shouting "I know where everything is."`,
+    text: `The branches are named main, main-backup, main-old, main-new-final, main-new-final-v2, and "the-real-one." Every person who clones this has to ask which branch is current. Every PR gets submitted to the wrong place first. You built a maze out of something that was supposed to have a single obvious path.`,
     badge: 'BRANCH NAME CHAOS',
   },
   {
     id: 'dev-07', tier: 'dev_culture', repoTypes: ['backend', 'generic'],
     severity: 'warning',
-    text: `The .env.example file contains 18 environment variables. Three of them have comments explaining what they are. The other 15 are mysteries: DATABASE_SECRET_KEY_PROD_V2, API_THING_TOKEN, ENABLE_THE_FEATURE, LEGACY_FLAG_DO_NOT_TOUCH, and PLEASE_LEAVE_THIS_AS_TRUE. New team members spend their first week trying to understand what ENABLE_THE_FEATURE enables. Senior developers shrug and say "just set it to true, it's always been true." Nobody knows what happens when it's false. Nobody will find out. PLEASE_LEAVE_THIS_AS_TRUE has never been set to false in any environment. This is how institutional knowledge dies: one undocumented environment variable at a time, passed down like a dark family secret.`,
+    text: `15 undocumented environment variables in .env.example. Nobody knows what ENABLE_THE_FEATURE does. Nobody knows what happens when PLEASE_LEAVE_THIS_AS_TRUE is false. New developers spend their first week asking around. Senior developers shrug and say "just set it to true." That's not onboarding. That's hazing.`,
     badge: 'ENV HAZING RITUAL',
   },
   {
     id: 'dev-08', tier: 'dev_culture', repoTypes: ['generic'],
     severity: 'note',
-    text: `git blame reveals that the single most important function in this entire codebase — the one everything else depends on, the one that processes the core business logic, the one that if removed would collapse the entire system — was last touched by someone who left the company in 2022. Nobody fully understands it. When a new developer asks what it does, senior developers go quiet and say "it just works, don't touch it." It has three known bugs that everyone is aware of and nobody fixes because fixing them causes five different things to break. It is load-bearing technical debt. It will outlive the company. It will outlive all of them.`,
+    text: `The most important function in this codebase hasn't been touched since 2022 by someone who left the company. Nobody fully understands it. There are three known bugs in it that nobody fixes because fixing them breaks other things. You have a load-bearing piece of code that nobody can explain and nobody will touch. That's the position everyone working here is in.`,
     badge: 'LEGACY HAUNTING',
   },
 
@@ -148,49 +148,49 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'code-01', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'critical',
-    text: `The function is named processData. Its parameter is named data. Its return variable is named result. Its local variables are named temp, temp2, tempResult, and finalResult. This function contains more nouns than a grocery list and less information than a blank page. A developer reading this for the first time knows: (1) something is a process, (2) data is involved, (3) a result will emerge. They do not know what the data is, what "processing" means in this context, what the result represents, or why this function exists. Every variable name is a locked door with no key. The entire function is a riddle where the answer is "ask someone who has already quit."`,
+    text: `processData takes data, stores it in temp, and returns result. Every variable name in this function is a placeholder for the actual name someone should have used. Any developer who opens this has to reverse-engineer what this does from scratch because the code refuses to explain itself. You named everything and said nothing.`,
     badge: 'CONTENT-FREE NAMING',
   },
   {
     id: 'code-02', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'critical',
-    text: `The error handling in this codebase is: try { } catch(e) { } — the empty catch block. The error is caught, observed briefly, and released back into the wild, silent and free, carrying no information about what went wrong or why. Users experience failures with no error messages. Logs contain no stack traces. Monitoring shows nothing because nothing was logged. The application fails gracefully in the way a building "gracefully" collapses — the outside looks intact while the inside is structurally destroyed. Somewhere, in a production environment, an error is being swallowed right now. It has been swallowing errors for months. Nobody knows. The catch block ensures that nobody will ever know.`,
+    text: `catch(e) {} everywhere. You catch errors and do nothing with them. No log, no rethrow, nothing. Users see failures with no message. Logs show nothing. When something breaks in production, there is no trace anywhere because you made sure there wouldn't be. Every silent failure in this app is a catch block you wrote.`,
     badge: 'ENLIGHTENED ERROR HANDLING',
   },
   {
     id: 'code-03', tier: 'code_quality', repoTypes: ['frontend', 'generic'],
     severity: 'warning',
-    text: `There is a ternary inside a ternary inside a ternary inside a ternary. It spans one line. That line is 214 characters long. It was committed with the message "simplify logic." The developer who wrote it genuinely believed this was simpler than the alternative. The alternative, based on git history, was a readable if-else block that took four lines. The four-line readable block was deleted and replaced with this 214-character single-line nested ternary chain that requires a decoder ring and a session with a therapist to parse. The commit message says "simplify." The code does not know what that word means.`,
+    text: `A ternary inside a ternary inside a ternary, 214 characters on one line, committed as "simplify logic." There was a readable if-else block here before. You deleted it and replaced it with this. The next developer who needs to change this condition is going to spend 20 minutes untangling what you called simple.`,
     badge: 'RECURSIVE TERNARY',
   },
   {
     id: 'code-04', tier: 'code_quality', repoTypes: ['generic'],
     severity: 'warning',
-    text: `The magic number 86400 appears 11 times in this codebase. Not once is it defined as a constant. Not once is it commented. Every occurrence is a standalone mystery integer that means nothing to anyone who does not already know that 86400 is the number of seconds in a day. Three of the 11 occurrences are actually wrong — they don't account for daylight saving time and will cause bugs twice a year, silently, in a timezone-dependent way that will be nearly impossible to reproduce in development. The developer who wrote 86400 eleven times instead of defining a constant once has created a bug that will manifest at 2am on a Sunday in March. In a country they may never have visited. Affecting users they will never meet.`,
+    text: `86400 appears 11 times in this codebase with no constant, no comment. Three of those 11 are wrong — they don't account for daylight saving and will break twice a year in certain timezones. Nobody will know why. The bug will be nearly impossible to reproduce in development. You put a time bomb in here 11 times.`,
     badge: 'MAGIC NUMBER ARCHAEOLOGY',
   },
   {
     id: 'code-05', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'critical',
-    text: `There are 17 TODO comments in this codebase. The oldest is from 1,142 days ago and reads: "TODO: fix this — it's a temporary hack, remove before production." It is in production. It has been in production for longer than most entry-level developers stay at their first job. The hack has been promoted, renamed, and integrated so deeply into the system architecture that it is no longer possible to remove it without rebuilding three adjacent systems. It is no longer temporary. It is foundational. The word "temporary" in software engineering means "will outlive the person who wrote it," and this TODO comment is the living proof of that theorem.`,
+    text: `"Temporary hack — remove before production." That comment is 1,142 days old. It went to production on day 4. The hack is load-bearing now. You can't remove it. Everyone who has worked here since knows it's there, knows it shouldn't be, and can't touch it. You made a temporary decision permanent by ignoring it long enough.`,
     badge: 'PERMANENT TEMPORARY HACK',
   },
   {
     id: 'code-06', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'note',
-    text: `The README proudly claims "comprehensive test coverage." The actual test coverage, measured empirically, is 4%. Garfield has attempted to reconcile these two facts and cannot. Four percent is not comprehensive in any language, framework, or definition of the word. Four percent is the coverage you get when someone writes a test for the main function and then goes to lunch and never comes back. Four percent means that 96% of this codebase exists in a quantum state where it both works and doesn't work until someone runs it in production and finds out. "Comprehensive" is doing more heavy lifting in this README than the entire test suite combined.`,
+    text: `The README says "comprehensive test coverage." The actual coverage is 4%. Everyone who reads this and trusts it is going to make decisions based on a lie. You wrote "comprehensive" knowing it wasn't, or without checking, and that word is still there doing damage.`,
     badge: '"COMPREHENSIVE" = 4%',
   },
   {
     id: 'code-07', tier: 'code_quality', repoTypes: ['frontend', 'backend', 'generic'],
     severity: 'warning',
-    text: `A component file is 847 lines long. It is named Button.tsx. It renders a button. Somewhere between line 1 and line 847, this button acquired: a complete authentication flow, two separate API call handlers, a date formatting utility, a recursive memoization strategy, what appears to be a partial reimplementation of Redux written from scratch with the variables renamed, and a comment that says "TODO: split this into smaller components" dated 8 months ago. The button still renders. The button works. The button has grown so large and complex that it has become sentient and is now making architectural decisions for the rest of the application. Garfield respects its resilience. He does not respect its boundaries.`,
+    text: `Button.tsx is 847 lines long and handles auth, API calls, date formatting, and what looks like a reimplementation of Redux. There's a TODO from 8 months ago saying "split this up." Every developer who needs to change the button has to open an 847-line file to do it. You let this happen and then wrote a TODO about it.`,
     badge: 'BUTTON WITH AMBITIONS',
   },
   {
     id: 'code-08', tier: 'code_quality', repoTypes: ['ml_data', 'generic'],
     severity: 'warning',
-    text: `The Jupyter notebook has 112 cells. Cells 1 through 52 are for "data loading," a process that apparently requires 52 discrete steps and produces 34 warning messages that are all suppressed with filterwarnings('ignore'). Cell 53 is titled "Initial Exploration" and contains a single scatterplot with no axis labels, rendered three times with different color schemes. Cells 54 through 111 are variations of the same histogram with incrementally adjusted bin sizes. Cell 112 is titled "FINAL ANALYSIS - USE THIS ONE" and was added six months after everything else. Garfield has eaten lasagna with more analytical rigor than this notebook. The lasagna had better-defined variables.`,
+    text: `112 cells. 34 warnings suppressed with filterwarnings("ignore"). Cells 54 through 111 are variations of the same histogram. Cell 112 is labeled "FINAL ANALYSIS - USE THIS ONE" and appeared 6 months after everything else. Nobody running this knows which cells to run or in what order. It's a record of a process, not a reproducible analysis.`,
     badge: 'NOTEBOOK ARCHAEOLOGY',
   },
 
@@ -199,64 +199,64 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'rt-markdown-01', tier: 'repo_type', repoTypes: ['markdown_collection'],
     severity: 'critical',
-    text: `This repository contains no code. It is a single markdown file with hyperlinks in it. It has been starred by thousands of developers who apparently consider a curated list of URLs to be equivalent in value to actual software. Garfield has spent considerable time staring at this situation. The repository has more stars than many fully-functioning applications. The repository requires no build step, no runtime environment, no tests, and no maintenance beyond "verify links are still valid." It is a text file that became famous. Garfield is reconsidering every career decision he has ever made, which is impressive because he has never had a career.`,
+    text: `This is a markdown file with links in it. That's the entire repo. No code, no build step, no runtime. A text file. It has more stars than most actual software. I'm not saying anything else about this. I just want it on record.`,
     badge: 'NOT CODE BUT STARRED',
   },
   {
     id: 'rt-markdown-02', tier: 'repo_type', repoTypes: ['markdown_collection'],
     severity: 'warning',
-    text: `The CI/CD pipeline for this repository does the following: validates that each link in the markdown file resolves to a working URL. That is the entire pipeline. GitHub Actions runs on every pull request to verify that the submitted links are real links. The pipeline took engineering hours to write. It runs on cloud infrastructure. It costs money per invocation. It is protecting a markdown file from broken hyperlinks with the same infrastructure that other teams use to deploy distributed systems to multiple availability zones. The cost per unit of value protected here is immeasurable. Garfield has stared at the GitHub Actions tab for 40 minutes. He still doesn't know how to feel.`,
+    text: `There is a CI/CD pipeline protecting this repo. It checks that the links in the markdown file are still live. GitHub Actions. Cloud infrastructure. Real money. To verify that URLs resolve. For a text file. Someone made that decision and nobody stopped them.`,
     badge: 'CI FOR A MARKDOWN FILE',
   },
   {
     id: 'rt-markdown-03', tier: 'repo_type', repoTypes: ['markdown_collection'],
     severity: 'note',
-    text: `Section: "Awesome Resources." Section: "More Awesome Resources." Section: "Even More Awesome Resources." Section: "Additional Awesome Resources You Should Know About." Section: "Resources That Are Also Quite Awesome." The word "awesome" appears 47 times in this document. "Awesome" originally meant "inspiring awe." It now means "a link exists and someone thought it was worth adding." Garfield has experienced actual awe exactly twice in his life: once when he saw a lasagna the size of a small building, and once when he read a particularly well-structured function. He does not experience awe at markdown section headers. He experiences a profound tiredness that he suspects is philosophical in nature.`,
+    text: `"Awesome Resources." "More Awesome Resources." "Even More Awesome Resources." "Additional Awesome Resources You Should Know About." The word "awesome" appears 47 times. Nothing here is described beyond the fact that it exists and someone thought it was worth linking. That's the entire curatorial standard.`,
     badge: 'AWESOME INFLATION',
   },
   {
     id: 'rt-frontend-01', tier: 'repo_type', repoTypes: ['frontend'],
     severity: 'critical',
-    text: `The production bundle is 4.7MB. The application, in its entirety, renders a landing page with a hero section, a three-column feature grid, and a contact form with four fields. This is the digital equivalent of hiring a moving truck to transport a single houseplant. The node_modules folder contains 847 packages, of which the application directly uses 12. The remaining 835 packages are the dependencies of dependencies of dependencies, an infinite regression of software that exists to support software that supports software, all of it compiled into a 4.7MB monument to the npm ecosystem's complete absence of restraint. Garfield weighs more than he should. He owns this. He is not packaging lodash to center a div.`,
+    text: `4.7MB bundle. A hero section, a three-column grid, and a contact form. 847 packages in node_modules, 12 actually used. Every user downloads 4.7MB before they can read your headline. That's a choice you made, then deployed, and apparently never looked at again.`,
     badge: '4.7MB FOR A LANDING PAGE',
   },
   {
     id: 'rt-backend-01', tier: 'repo_type', repoTypes: ['backend'],
     severity: 'critical',
-    text: `The API has 31 endpoints. Six are documented. The remaining 25 are discoverable through a combination of reading the source code, running the server locally, making requests until something doesn't return a 404, and consulting a Slack message from 2021 where someone who no longer works here explains what POST /api/v1/process/run/execute/do does. This is not an API. This is an archaeological dig disguised as a web service. The API contract is oral tradition, passed from senior developer to junior developer through whispered explanations and screenshots of Postman collections. The documentation says "see code for details." The code says nothing.`,
+    text: `31 endpoints. 6 documented. The other 25 are discoverable only by reading the source or finding the right Slack message from 2021 from someone who no longer works here. Every developer integrating with this API is starting from zero because you documented 19% of what you built.`,
     badge: 'API SCAVENGER HUNT',
   },
   {
     id: 'rt-infra-01', tier: 'repo_type', repoTypes: ['config_infra'],
     severity: 'warning',
-    text: `The Dockerfile runs as root. The docker-compose.yml has database passwords in plaintext. The CI pipeline pushes directly to production on every merge to main with no staging environment, no smoke tests, and no rollback procedure. The Kubernetes YAML files have resource limits set to "unlimited" because someone said "we'll optimize later" in 2022 and later has not arrived. There is a secret in the repository called AWS_SECRET_KEY_DO_NOT_COMMIT that was committed, pushed to GitHub, and has been sitting in the public repository's git history for eight months. Garfield has audited nuclear facilities with better security posture. And he is a cat who doesn't know what a nuclear facility is.`,
+    text: `Dockerfile runs as root. Database passwords in plaintext in docker-compose.yml. AWS key sitting in the git history of a public repo. CI pushes directly to production on every merge. Each one of those is a separate decision that got made, reviewed, and merged. All of them.`,
     badge: 'PRODUCTION ROULETTE',
   },
   {
     id: 'rt-ml-01', tier: 'repo_type', repoTypes: ['ml_data'],
     severity: 'warning',
-    text: `The model achieves 99.7% accuracy on the training set. On the held-out test set: 61%. On production data collected after deployment: 43%. The README features the 99.7% number in the title, the description, the badges, and the first paragraph. The 61% and 43% numbers appear nowhere in the repository, the paper, the blog post, or the conference talk given about this model. Garfield has consumed lasagna that looked significantly better than it tasted. He recognizes this pattern with the instinct of someone who has been disappointed by packaging before. The packaging is exceptional. The contents are a different conversation entirely.`,
+    text: `99.7% accuracy on the training set. 43% on production data. The README features 99.7% in the title, the description, and the badges. The 43% is mentioned nowhere. Everyone deciding whether to use this model is making that decision based on a number that has nothing to do with how it actually performs.`,
     badge: 'TRAINING SET CONFIDENCE',
   },
 
-  // ══ TIER A+: DARK / EXISTENTIAL GARFIELD
+  // ══ TIER A+: DARK GARFIELD
 
   {
     id: 'gf-09', tier: 'garfield', repoTypes: ['generic'],
     severity: 'critical',
-    text: `I have stared into many voids. I stare into the void every Monday. I stare into it when Jon serves diet cat food and calls it dinner. I stare into it at 3am when Odie breathes too loudly. But none of those voids have stared back at me with the specific flavor of emptiness I found inside this catch block: catch(e) {}. Two braces. No body. No log. No rethrow. The developer saw an error, acknowledged its existence, gave it two empty walls as a home, and walked away. That error is still free. It is failing silently in production right now. It has been failing silently for months. It will continue to fail silently until someone, somewhere, opens a support ticket and asks why nothing works. Write console.error(e). I should not have to explain this to a person who owns a keyboard.`,
+    text: `catch(e) {} — you caught the error, gave it two empty braces, and walked away. That error is failing silently in production right now. When users report that nothing works, there will be no log anywhere to explain why, because you made sure there wouldn't be. You built a black hole into your error handling and shipped it.`,
     badge: 'VOID DETECTED',
   },
   {
     id: 'gf-10', tier: 'garfield', repoTypes: ['generic'],
     severity: 'critical',
-    text: `Congratulations on hardcoding the API key directly into the source file and committing it to version control. Truly. A bold choice. Most developers — burdened by the inconvenience of thinking more than 30 seconds ahead — would have put it in a .env file, a technology that has existed since approximately the Jurassic period of software development. But not here. Here the key sits in the code. Aging. Exposed. Readable by anyone who has ever heard of GitHub. A future security researcher will find this commit and they will screenshot it and they will not be kind about what they say. It takes eleven characters to type process.env.API_KEY. I counted. You have no excuse. Move it.`,
+    text: `The API key is hardcoded in the source file and committed to version control. Not in .env. In the actual file. Anyone who has ever cloned or forked this repo has your key. GitHub's secret scanner flagged it. You're still looking at it right now. That key has been compromised since the first push.`,
     badge: 'CONGRATULATIONS',
   },
   {
     id: 'gf-11', tier: 'garfield', repoTypes: ['generic'],
     severity: 'warning',
-    text: `I fell asleep reading this function. I am not exaggerating for comic effect — I made it to line 31, where the function calls itself recursively for reasons that the code does not explain and the comments do not address, and I lost consciousness. I dreamed about the function. In the dream it had documentation. In the dream there was a base case. In the dream the developer had drawn a diagram before writing this. I woke up. The function was still there. I read it again. It still doesn't have a base case that I can find with confidence. I went back to sleep. I am writing this review from a state of partial unconsciousness and my recommendation is: document the recursion, add the base case explicitly, and explain why this function exists. Do it for whoever reads this after me. Do it because I cannot.`,
+    text: `This function calls itself recursively and I cannot find a clear base case after reading it four times. I cannot tell you with confidence that this doesn't infinitely recurse under certain inputs. Nobody maintaining this is going to be able to tell you either. You shipped logic you probably couldn't explain if someone asked you in a meeting.`,
     badge: 'GARFIELD GIVES UP',
   },
 
@@ -265,28 +265,28 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'dev-09', tier: 'dev_culture', repoTypes: ['generic'],
     severity: 'warning',
-    text: `There is a comment on line 47 that reads "temporary fix — remove before release." It was written 1,142 days ago. The release happened on day 4. The developer who wrote "temporary" is now employed at a different company in a different city and has started a family. Their replacement doesn't know the comment exists. The replacement's replacement doesn't know the replacement existed. The codebase has been migrated across three hosting providers, survived two all-hands incidents described in postmortems as "unrelated to this component," and been partially rewritten twice. The temporary fix survived all of it. It is foundational now. It is the thing holding the adjacent system together through a mechanism nobody has fully mapped. You can't remove it. You can't explain it. You can only preserve it and feel vaguely guilty when it comes up in conversation.`,
+    text: `"Temporary fix — remove before release." That comment is 1,142 days old. The person who wrote it doesn't work here anymore. Their replacement doesn't know the comment exists. The fix is load-bearing now. Everyone working in this codebase is working around something nobody can explain and nobody can remove.`,
     badge: 'IMMORTAL WRONG',
   },
   {
     id: 'dev-10', tier: 'dev_culture', repoTypes: ['frontend', 'backend', 'generic'],
     severity: 'note',
-    text: `This project has lodash as a production dependency. It uses lodash.get exactly once, in a file called utils/helpers/misc/general/index.ts, on a single line, to access a nested property that could have been accessed with optional chaining — a JavaScript feature that has been available since 2019 and requires zero npm packages to use. The production bundle ships 4.2MB of lodash to every user who loads this application so that one developer, on one occasion, could avoid typing a question mark followed by a dot. I have thought about this for longer than I am comfortable admitting. I have reached no useful conclusion. I went and had some lasagna. The lodash import was still there when I came back.`,
+    text: `lodash is a production dependency used exactly once to call lodash.get on a nested property. Optional chaining has done this natively since 2019 with no npm package required. Every user who loads this app downloads lodash so that one line of code doesn't have to use a question mark. That's in the bundle. That's shipped to everyone.`,
     badge: '4.2MB FOR A DOT',
   },
 
-  // ══ TIER C+: CODE QUALITY DARK / SURREAL
+  // ══ TIER C+: CODE QUALITY DARK
 
   {
     id: 'code-09', tier: 'code_quality', repoTypes: ['backend', 'frontend', 'generic'],
     severity: 'critical',
-    text: `The variable is named data. Its TypeScript type is any. It is passed through six consecutive functions. Each function receives it as data. Each function types it as any. By the time data reaches the rendering layer, it could be a string, a number, an object, an array, null, undefined, or a malformed API response that three layers of type erasure have successfully hidden from everyone involved. TypeScript is installed. TypeScript is configured. TypeScript is watching every file. TypeScript has been suppressed with @ts-ignore on four separate occasions. The developer installed a type system and then defeated it manually, function by function, like they had a personal grievance against type safety. I want to understand this. I have tried. I cannot.`,
+    text: `Typed as any, passed through six functions. TypeScript is installed, configured, and has been manually defeated with @ts-ignore four separate times. You installed a type system and then fought it every time it tried to help you. Every bug TypeScript would have caught is now a runtime error waiting to happen in production.`,
     badge: 'TYPESCRIPT DEFEATED',
   },
   {
     id: 'code-10', tier: 'code_quality', repoTypes: ['frontend'],
     severity: 'warning',
-    text: `There are 14 z-index values in this stylesheet. The lowest is 1. The highest is 99999. In between: 100, 200, 999, 1000, 1001, 9000, 9999, 10000, 10001, 99998, and two that are simply "inherit." I can reconstruct the entire history of this frontend from these numbers alone. A developer needed something to appear on top of something else. They tried z-index: 1. It didn't work. They tried 100. Still didn't work. Each escalation represents a moment of real despair — a person losing a war against their own stylesheet, adding zeros like prayer. z-index: 99999 is not a number. It is a developer at 2am who has given up on understanding why and has chosen instead to simply overwhelm the problem with size. Create a z-index scale with six named levels and commit to it. I know you will not. I am noting it for the record.`,
+    text: `z-index values in this stylesheet go from 1 to 99999. No system. Every number is a moment someone needed something on top of something else and couldn't figure out why it wasn't working. z-index: 99999 is not a decision. It's a record of someone losing a fight with their own CSS and choosing to escalate instead of understand.`,
     badge: 'Z-INDEX ARMS RACE',
   },
 
@@ -295,13 +295,13 @@ export const JOKES_BANK: GarfieldJoke[] = [
   {
     id: 'rt-backend-02', tier: 'repo_type', repoTypes: ['backend'],
     severity: 'critical',
-    text: `The API endpoint reads req.body.userId on line 3 and passes it directly to a database query on line 4. There is no null check. There is no type validation. There is no schema verification. There is nothing between user input and database query except one line of whitespace and the developer's faith that the incoming data will be well-formed. That faith has been broken every time someone sends a malformed request. The server crashes. The logs say "cannot read property id of undefined." Someone restarts it. Everyone moves on. Nobody adds validation. The faith is restored. The cycle continues. Validate req.body before touching it. I am writing this from a couch and even from here the correct approach is obvious.`,
+    text: `req.body.userId goes directly into a database query with no validation, no null check, no type check. The server crashes when someone sends a malformed request. Someone restarts it. Nobody adds validation. You can see this in the issue history. It has happened before. It will happen again.`,
     badge: 'NULL POINTER FAITH',
   },
   {
     id: 'rt-generic-01', tier: 'repo_type', repoTypes: ['generic'],
     severity: 'note',
-    text: `This repository has one commit. The message is "initial commit." It was made 312 days ago. There are no other commits. The README says "work in progress — coming soon." It has said this for 312 days. The issues tab is empty. There are no branches. No contributors. No stars. No forks. The developer created the repository, assembled a structure, and then made a decision that has not yet been completed. The repository is waiting. It will keep waiting. The commit history is a monument to a promise made to nobody in particular, preserved in version control forever, publicly visible to anyone who finds it. I do not judge this. I spend most of my time not doing things either. But I have a lasagna. This repository has only its initial commit. The situations are not equivalent.`,
+    text: `One commit, 312 days ago: "initial commit." Nothing else. The README says "coming soon." Every person who finds this and thinks it might be useful reads that and leaves. That's every user this project has ever had. Coming soon for 312 days means it's not coming.`,
     badge: 'INITIAL COMMIT FOREVER',
   },
 ]
@@ -489,10 +489,11 @@ FORMULA: NAME the exact file+function/variable → call out the decision with co
 Write like a senior dev who is genuinely pissed off reading this. Short sentences. Personal. Rude. Direct.
 
 EXAMPLES:
-- "data2 in processData(), utils.js. What the hell is data2. You named a variable data2, committed it to a public repo, and went home. That is your name in the git log next to data2. That name is there forever and you chose it."
-- "catch(e) {} in handler.ts. You caught the error and did absolutely nothing. Zero. Not a log. Not a rethrow. You saw something break, wrapped it in a catch block so you'd feel better, then typed nothing inside it and saved the file. Errors are dying in there. You did that."
-- "MODEL hardcoded in route.ts line 7. Not in env. Just sitting in the file like you don't give a damn. When this breaks at 2am — and it will — everyone in the incident channel is going to see this line and know exactly what you did."
-- "84 lines of dead code still in helpers.js. Not commented out. Not in a branch. Just sitting there doing nothing. You knew it was dead. You left it anyway. Every dev who opens this file has to read through your garbage to find what they need."
+- "data2 in processData(), utils.js. You named a variable data2. Not as a placeholder, not temporarily. You looked at that name, decided it was fine, and committed it. That's your username in the git log next to data2. Anyone who maintains this has to guess what data2 means because you didn't think it was worth explaining."
+- "catch(e) {} in handler.ts. You caught the error and did nothing. Not a log, not a rethrow, nothing. When something breaks in production there will be no trace anywhere because you made sure there wouldn't be. Every silent failure in this app traces back to a catch block you wrote and walked away from."
+- "MODEL hardcoded in route.ts line 7. Not in env. In the file. When this breaks at 2am — and it will — everyone in the incident channel is going to see that line and know exactly whose decision that was."
+- "84 lines of dead code in helpers.js. Not commented out. Not in a branch. Just sitting there. You knew it was dead. You left it anyway. Every dev who opens this file has to read through your garbage to find what they actually need."
+- "The README has said 'coming soon' for 14 months. Nobody who cloned this can run it without asking you directly. You made yourself the only documentation and then stopped being available."
 
 BANNED: 'you should', 'consider', 'fix this', 'use X instead', 'for maintainability', 'should be centralized', any imperative advice, clever metaphors, comedy-bit endings
 
