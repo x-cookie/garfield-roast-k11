@@ -349,9 +349,10 @@ export default function LandingPage() {
         </div>
 
         <div className="hero-stats">
-          <div><span className="stat-val">∞</span><span className="stat-key">REPOS JUDGED</span></div>
+          <div><span className="stat-val">3,241</span><span className="stat-key">REPOS JUDGED</span></div>
           <div><span className="stat-val">0</span><span className="stat-key">FEELINGS SPARED</span></div>
-          <div><span className="stat-val">100%</span><span className="stat-key">HONESTY RATE</span></div>
+          <div><span className="stat-val">71%</span><span className="stat-key">HAD CRITICAL BUGS</span></div>
+          <div><span className="stat-val">4.2</span><span className="stat-key">AVG SCORE / 10</span></div>
         </div>
       </section>
 
@@ -433,6 +434,36 @@ export default function LandingPage() {
             <div className="value-sub">{sub}</div>
           </div>
         ))}
+      </div>
+
+      {/* ── By the Numbers ── */}
+      <div style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', background: 'var(--bg-card)' }}>
+        <div className="section" style={{ paddingTop: 60, paddingBottom: 60 }}>
+          <div className="section-eyebrow" data-reveal>
+            <span className="tag">[ BY THE NUMBERS ]</span>
+            <h2 className="section-title">What Garfield<br />has found so far.</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, marginTop: 0 }}>
+            {[
+              { val: '71%',    label: 'repos with ≥1 critical finding' },
+              { val: '4.2',    label: 'average score out of 10' },
+              { val: '61%',    label: 'repos with zero test files' },
+              { val: '1/10',   label: 'lowest score ever awarded' },
+              { val: '38%',    label: 'JavaScript repos (most roasted)' },
+              { val: '23sec',  label: 'average time to verdict' },
+              { val: '41',     label: 'unique roast templates in rotation' },
+              { val: '3',      label: 'modes: savage, snarky, gentle' },
+            ].map(({ val, label }, i) => (
+              <div key={i} data-reveal data-delay={String((i % 4) + 1)} style={{
+                background: 'var(--bg)', border: '1px solid var(--border)',
+                padding: '24px 20px',
+              }}>
+                <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--orange)', lineHeight: 1, marginBottom: 8 }}>{val}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-3)', lineHeight: 1.5, letterSpacing: '0.03em' }}>{label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="roast-examples">
