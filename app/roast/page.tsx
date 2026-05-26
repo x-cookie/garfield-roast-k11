@@ -249,19 +249,6 @@ const SKIP = [
   /\.(png|jpg|gif|svg|ico|woff|woff2|ttf|eot|pdf|zip|tar|gz)$/i,
 ];
 
-function rlCheck(): boolean {
-  if (typeof window === 'undefined') return true;
-  const today = new Date().toDateString();
-  const d = JSON.parse(localStorage.getItem('_gr') || '{"d":"","n":0}');
-  if (d.d !== today) { localStorage.setItem('_gr', JSON.stringify({ d: today, n: 0 })); return true; }
-  return d.n < 3;
-}
-
-function rlIncr() {
-  const today = new Date().toDateString();
-  const d = JSON.parse(localStorage.getItem('_gr') || '{"d":"","n":0}');
-  localStorage.setItem('_gr', JSON.stringify({ d: today, n: d.d === today ? d.n + 1 : 1 }));
-}
 
 const PROG_STEPS = [
   { pct: 10, label: 'Connecting to GitHub...', ms: 300,   frame: 0, subInt: 300 },
@@ -286,7 +273,6 @@ export default function RoastPage() {
   const [chipVisible, setChipVisible] = useState(false);
   const [chipData, setChipData] = useState({ name: '—', lang: '—', stars: '— ⭐', files: '— files' });
   const [loading, setLoading] = useState(false);
-  const [rlWarn, setRlWarn] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [gfFrame, setGfFrame] = useState(STEP_FRAMES[0][0]);
   const [gfKey, setGfKey] = useState(0);
@@ -407,7 +393,6 @@ export default function RoastPage() {
   }
 
   async function doRoast() {
-    if (!rlCheck()) { setRlWarn(true); return; }
     if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) { setInputState('state-bad'); return; }
     setErrorMsg('');
     startLoader();
@@ -417,11 +402,10 @@ export default function RoastPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ repoUrl: repo, mode }),
       });
-      if (res.status === 429) { stopLoader(); setRlWarn(true); return; }
+      if (res.status === 429) { stopLoader(); setErrorMsg('Too many requests. Try again in a moment.'); return; }
       if (res.status === 422) { stopLoader(); setErrorMsg('Could not fetch this repository. Make sure it\'s public and not empty.'); return; }
       if (!res.ok) { stopLoader(); setErrorMsg('Something went wrong. Try again in a moment.'); return; }
       const result = await res.json();
-      rlIncr();
       sessionStorage.setItem('garfield_result', JSON.stringify({
         result, repo, mode,
         files: filesRef.current,
@@ -484,13 +468,6 @@ export default function RoastPage() {
             </button>
           ))}
         </div>
-
-        {rlWarn && (
-          <div className="rl-warn show">
-            <IconWarning size={14} />
-            You&apos;ve used all 3 free roasts today. Come back tomorrow.
-          </div>
-        )}
 
         {errorMsg && (
           <div className="rl-warn show" style={{ borderColor: 'var(--red)', color: 'var(--red)' }}>
