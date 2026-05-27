@@ -335,7 +335,7 @@ export default function LandingPage() {
               <IconFlame size={16} />
               ROAST MY REPO
             </button>
-            <button className="btn btn-outline btn-hero">
+            <button className="btn btn-outline btn-hero" onClick={() => router.push('/examples')}>
               SEE AN EXAMPLE →
             </button>
           </div>
