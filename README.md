@@ -1,7 +1,7 @@
 # Garfield Roast
 
 <p align="center">
-  <img src="public/logo.jpeg" alt="Garfield Roast mascot" width="260" />
+  <img src="public/banner.jpeg" alt="Garfield Roast" width="640" />
 </p>
 
 **Paste a GitHub repo URL. Garfield reads every file and roasts your code — specifically and mercilessly.**
