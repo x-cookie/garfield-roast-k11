@@ -18,7 +18,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 
 body {
   background: var(--bg);
@@ -588,6 +588,12 @@ body {
 .rpanel { animation: slideInR 0.45s cubic-bezier(0.22,1,0.36,1) 0.08s both; }
 .score-card { animation: rise 0.5s ease 0.22s both; }
 
+/* Page entrance */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* Glitch effect */
 .glitch { display: inline-block; animation: glitch 6s ease infinite; }
 @keyframes glitch {
@@ -605,6 +611,109 @@ body {
 }
 .ritem.is-bank     { border-left-color: var(--orange); }
 .ritem.is-specific { border-left-color: var(--claude); }
+
+/* ═══════════════════════════════════════════
+   EXAMPLES PAGE
+═══════════════════════════════════════════ */
+#examples-page { padding-top: 52px; }
+
+.ex-hero {
+  padding: 80px 60px 60px;
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+  max-width: 900px;
+}
+.ex-title {
+  font-size: clamp(32px, 4vw, 54px);
+  font-weight: 800; line-height: 1.1;
+}
+.ex-sub {
+  font-size: 13.5px; color: var(--text-2); line-height: 1.6; max-width: 480px;
+}
+
+.ex-page-grid {
+  display: flex; flex-direction: column; gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.ex-page-card {
+  border-bottom: 1px solid var(--border);
+  padding: 36px 60px;
+  transition: background 0.15s;
+}
+.ex-page-card:hover { background: rgba(255,255,255,0.012); }
+
+.ex-card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 20px;
+}
+.ex-card-meta { display: flex; flex-direction: column; gap: 4px; }
+.ex-repo-name {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  letter-spacing: 0.02em;
+}
+.ex-repo-name::before { content: 'github.com/'; color: var(--text-3); }
+.ex-repo-desc { font-size: 11px; color: var(--text-3); letter-spacing: 0.04em; }
+.ex-mode-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  padding: 3px 10px; border: 1px solid; flex-shrink: 0;
+}
+
+.ex-score-row {
+  display: flex; align-items: flex-start; gap: 24px; margin-bottom: 24px;
+}
+.ex-score-num {
+  font-size: 56px; font-weight: 800; line-height: 1; flex-shrink: 0; width: 80px;
+}
+.ex-score-denom { font-size: 18px; color: var(--text-3); font-weight: 400; }
+.ex-score-right { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; flex: 1; }
+.ex-score-bar {
+  display: flex; gap: 3px; height: 6px;
+}
+.ex-score-seg {
+  flex: 1; background: var(--border); border-radius: 1px;
+}
+.ex-score-seg.filled { box-shadow: 0 0 4px currentColor; }
+.ex-verdict { font-size: 12px; color: var(--text-2); font-style: italic; line-height: 1.5; }
+
+.ex-findings {
+  display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;
+}
+.ex-finding {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  padding: 12px 14px; font-size: 12px;
+}
+.ex-finding.ex-sev-critical { border-left-color: var(--red); }
+.ex-finding.ex-sev-warning  { border-left-color: var(--orange); }
+.ex-finding.ex-sev-note     { border-left-color: var(--green); }
+
+.ex-card-footer { margin-top: 4px; }
+.ex-badge-large {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  padding: 3px 10px; border: 1px solid var(--border-hi);
+  color: var(--text-3);
+}
+
+.ex-cta {
+  padding: 80px 60px;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px;
+}
+.ex-cta-title { font-size: clamp(28px, 3.5vw, 44px); font-weight: 800; margin-bottom: 6px; }
+.ex-cta-sub { font-size: 13px; color: var(--text-2); margin-bottom: 24px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ex-hero, .ex-page-card, .ex-cta { padding-left: 32px; padding-right: 32px; }
+  .ex-score-num { font-size: 42px; width: 64px; }
+}
+@media (max-width: 600px) {
+  .ex-hero, .ex-page-card, .ex-cta { padding-left: 20px; padding-right: 20px; }
+  .ex-card-header { flex-direction: column; }
+  .ex-score-row { gap: 16px; }
+}
 
 /* Responsive */
 @media (max-width: 900px) {

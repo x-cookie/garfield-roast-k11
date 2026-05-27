@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import SmoothScroll from '@/components/SmoothScroll';
+import PageTransition from '@/components/PageTransition';
 
 export const metadata = {
   title: 'Garfield Roast — Your Code Will Be Judged',
@@ -23,7 +25,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <Navbar />
-        {children}
+        <SmoothScroll>
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </SmoothScroll>
       </body>
     </html>
   );
