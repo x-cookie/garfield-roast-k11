@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconFlame, IconLink, IconCat, IconShare } from './icons';
 import HeroParticles from './components/HeroParticles';
@@ -264,6 +264,41 @@ const EXAMPLE_ROASTS = [
   { repo: 'github.com/coder/ml-project', text: '"You committed your .env with AWS credentials. In a public repo. Garfield is too tired to even be angry. Please rotate your keys and reconsider your life choices."', badge: 'SECURITY INCIDENT' },
 ];
 
+const CA = '5h4mM8w6XVy1oHcayhRu21m3QmRSCszQTqytexF2pump';
+
+function CAStrip() {
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(CA).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div className="ca-strip">
+      <span className="ca-label">CONTRACT ADDRESS</span>
+      <div className="ca-box">
+        <span className="ca-addr">{CA}</span>
+        <button className="ca-copy" onClick={copy} aria-label="Copy contract address">
+          {copied ? (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          )}
+          <span>{copied ? 'COPIED' : 'COPY'}</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const heroRef = useRef<HTMLPreElement>(null);
@@ -356,6 +391,8 @@ export default function LandingPage() {
           <img src="/logo.jpeg" alt="" aria-hidden="true" />
         </div>
       </section>
+
+      <CAStrip />
 
       <div className="ticker-wrap">
         <div className="ticker">

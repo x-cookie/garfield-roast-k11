@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <code>CA: 0x0000000000000000000000000000000000000000</code>
+  <code>CA: 5h4mM8w6XVy1oHcayhRu21m3QmRSCszQTqytexF2pump</code>
 </p>
 
 **Paste a GitHub repo URL. Garfield reads every file and roasts your code — specifically and mercilessly.**
