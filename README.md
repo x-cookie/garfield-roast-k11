@@ -1,7 +1,5 @@
 # Garfield Roast
 
-> **Contract Address:** `0x0000000000000000000000000000000000000000`
-
 <p align="center">
   <img src="public/banner.jpeg" alt="Garfield Roast" />
 </p>
