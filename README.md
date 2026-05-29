@@ -1,7 +1,13 @@
 # Garfield Roast
 
+> **Contract Address:** `0x0000000000000000000000000000000000000000`
+
 <p align="center">
   <img src="public/banner.jpeg" alt="Garfield Roast" />
+</p>
+
+<p align="center">
+  <code>CA: 0x0000000000000000000000000000000000000000</code>
 </p>
 
 **Paste a GitHub repo URL. Garfield reads every file and roasts your code — specifically and mercilessly.**
